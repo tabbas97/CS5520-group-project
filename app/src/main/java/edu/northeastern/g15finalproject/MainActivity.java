@@ -17,4 +17,8 @@ public class MainActivity extends AppCompatActivity {
     public void testFB(View view) {
         startActivity(new Intent(this, TestActivity.class));
     }
+
+    public void createReport(View view) {
+        startActivity(new Intent(this, ReportActivity.class));
+    }
 }
