@@ -27,7 +27,8 @@ public class ReportActivity extends AppCompatActivity {
             Report newReport = new Report(address, detail);
             FirebaseDatabase database = FirebaseDatabase.getInstance();
             database.getReference().child("report").push().setValue(newReport);
-
+            ((TextView) findViewById(R.id.address_input)).setText("");
+            ((TextView)findViewById(R.id.report_detail_input)).setText("");
         }
 
     }
