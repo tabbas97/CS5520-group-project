@@ -6,13 +6,186 @@
     android:layout_height="match_parent"
     tools:context=".MainActivity">
 
-    <TextView
+    <!--    Add the map fragment to main screen -->
+        <fragment
+            android:id="@+id/map_fragment"
+            android:name="com.google.android.gms.maps.SupportMapFragment"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_margin="5dp"
+            />
+
+    <RelativeLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Hello World!"
+        android:layout_margin="20dp"
+        android:clickable="true"
+        android:focusable="true"
+        android:visibility="visible"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        android:id="@+id/search_bar_layout"
+        >
+
+        <!--  Place a edit text search bar in front of the search button  -->
+        <EditText
+            android:id="@+id/search_bar"
+            android:layout_width="300sp"
+            android:layout_height="wrap_content"
+            android:layout_alignTop="@+id/floating_search_button"
+            android:layout_alignBottom="@id/floating_search_button"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:layout_toEndOf="@+id/floating_search_button"
+            android:background="@drawable/rounded_edit_text"
+            android:clickable="true"
+            android:focusable="true"
+            android:hint="   Search for a place"
+            android:inputType="text"
+            android:textColor="@color/black"
+            android:textColorHint="@color/black"
+            android:textSize="20sp"
+            android:visibility="visible"
+            app:backgroundTint="@color/white"
+            />
+
+        <!--   Add a floating search button that switches to a search bar when clicked -->
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/floating_search_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:clickable="true"
+            android:focusable="true"
+            android:src="@drawable/ic_search"
+            android:background="@drawable/search_background"
+            app:backgroundTint="@color/white"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.0" />
+    </RelativeLayout>
+
+    <!--   Add a toggle button that switches on or off map user loc syncing-->
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/toggle_button"
+        android:layout_margin="20dp"
+        android:clickable="true"
+        android:focusable="true"
+        app:backgroundTint="@color/white"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.95"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.9" />
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="5dp"
+        android:clickable="true"
+        android:focusable="true"
+        android:visibility="visible"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        android:id="@+id/bottom_buttons_layout"
+        android:orientation="horizontal">
+
+        <Button
+            android:layout_width="80dp"
+            android:layout_height="wrap_content"
+            android:id="@+id/reports_button"
+            android:layout_margin="5dp"
+            android:clickable="true"
+            android:focusable="true"
+            android:text="Reports"
+            android:textColor="@color/white"
+            android:textSize="10sp"
+            app:backgroundTint="@color/material_dynamic_neutral_variant70"
+            />
+
+        <!-- Add an empty button that will be the spaceholder for a floating action button -->
+        <Button
+            android:layout_width="80dp"
+            android:layout_height="wrap_content"
+            android:layout_margin="5dp"
+            android:clickable="true"
+            android:visibility="invisible"
+            />
+
+        <Button
+            android:layout_width="80dp"
+            android:layout_height="wrap_content"
+            android:layout_margin="5dp"
+            android:clickable="true"
+            android:visibility="invisible"
+            />
+
+        <Button
+            android:layout_width="80dp"
+            android:layout_height="wrap_content"
+            android:id="@+id/profile_settings_button"
+            android:layout_margin="5dp"
+            android:clickable="true"
+            android:focusable="true"
+            android:text="Profile"
+            android:textColor="@color/white"
+            android:textSize="10sp"
+            app:backgroundTint="@color/material_dynamic_neutral_variant70"
+            />
+
+        <!--  Settings button -->
+        <Button
+            android:layout_width="80dp"
+            android:layout_height="wrap_content"
+            android:id="@+id/settings_button"
+            android:layout_margin="5dp"
+            android:clickable="true"
+            android:focusable="true"
+            android:text="Settings"
+            android:textColor="@color/white"
+            android:textSize="10sp"
+            app:backgroundTint="@color/material_dynamic_neutral_variant70"
+            />
+
+    </LinearLayout>
+
+    <!-- Add a floating action button that says SOS in a red circle -->
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/sos_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:clickable="true"
+        android:focusable="true"
+        app:srcCompat="@drawable/baseline_sos_24"
+        app:backgroundTint="#FF5252"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.9" />
+
+    <!--  Add Report Button - above the location recenter button -->
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/report_button"
+        android:layout_margin="20dp"
+        android:clickable="true"
+        android:focusable="true"
+        app:srcCompat="@drawable/baseline_report_24"
+        app:layout_constraintBottom_toTopOf="@+id/toggle_button"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.95"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.95" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
+

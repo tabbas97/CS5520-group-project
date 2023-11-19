@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--Text of SOS in white-->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="48dp"
+    android:height="48dp"
+    android:viewportWidth="30"
+    android:viewportHeight="30">
+    <path
+        android:fillColor="@color/white"
+        android:pathData="M 20,20 L 20,10 A 10,10 0,0,0 10,20 L 20,20 z" />
+    <path
+        android:fillColor="@color/white"
+        android:pathData="M 20,20 L 20,30 A 10,10 0,0,0 30,20 L 20,20 z" />
+    <path
+        android:fillColor="@color/white"
+        android:pathData="M 20,20 L 20,30 A 10,10 0,0,0 30,20 L 20,20 z" />
+    <path
+        android:fillColor="@color/white"
+        android:pathData="M 20,20 L 20,30 A 10,10 0,0,0 30,20 L 20,20 z" />
+</vector>

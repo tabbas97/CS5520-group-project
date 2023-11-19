@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<adaptive-icon xmlns:android="http://schemas.android.com/apk/res/android">
+    <background android:drawable="@color/white" />
+    <!--  Magnifying lens  -->
+    <path
+        android:fillColor="@color/black"
+        android:pathData="M 20,20 L 20,10 A 10,10 0,0,0 10,20 L 20,20 z" />
+    <!--  Handle  -->
+    <path
+        android:fillColor="@color/black"
+        android:pathData="M 20,20 L 20,30 A 10,10 0,0,0 30,20 L 20,20 z" />
+    <!--  Glass  -->
+    <path
+        android:fillColor="@color/black"
+        android:pathData="M 20,20 L 20,30 A 10,10 0,0,0 30,20 L 20,20 z" />
+    <!--  Glass  -->
+    <path
+        android:fillColor="@color/black"
+        android:pathData="M 20,20 L 20,30 A 10,10 0,0,0 30,20 L 20,20 z" />
+
+
+</adaptive-icon>
