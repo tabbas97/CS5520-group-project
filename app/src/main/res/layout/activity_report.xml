@@ -5,8 +5,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <com.google.android.material.textfield.TextInputEditText
-        android:id="@+id/address_input2"
+    <EditText
+        android:id="@+id/report_detail_input"
         android:layout_width="310dp"
         android:layout_height="147dp"
         android:background="#EABFFF"
@@ -19,7 +19,7 @@
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="@+id/new_report"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.892"
+        app:layout_constraintVertical_bias="0.886"
         tools:ignore="MissingConstraints" />
 
     <TextView
@@ -54,7 +54,8 @@
         android:id="@+id/submit"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Button"
+        android:onClick="addReport"
+        android:text="Submit"
         android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -69,14 +70,14 @@
         android:text="Details"
         android:textSize="16sp"
         android:textStyle="bold"
-        app:layout_constraintBottom_toTopOf="@+id/address_input2"
+        app:layout_constraintBottom_toTopOf="@+id/report_detail_input"
         app:layout_constraintEnd_toEndOf="@+id/new_report"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="@+id/new_report"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.91" />
 
-    <com.google.android.material.textfield.TextInputEditText
+    <EditText
         android:id="@+id/address_input"
         android:layout_width="309dp"
         android:layout_height="81dp"
@@ -89,5 +90,5 @@
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="@+id/new_report"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.872" />
+        app:layout_constraintVertical_bias="0.804" />
 </androidx.constraintlayout.widget.ConstraintLayout>
