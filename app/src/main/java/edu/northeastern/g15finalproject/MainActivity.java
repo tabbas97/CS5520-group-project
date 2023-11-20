@@ -297,4 +297,8 @@ public class MainActivity extends AppCompatActivity {
             System.out.println("Request code not OK. Proceeding without SOS support");
         }
     }
+
+    public void testFB(View view) {
+        startActivity(new Intent(this, TestActivity.class));
+    }
 }
