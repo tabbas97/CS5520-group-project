@@ -299,6 +299,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void testFB(View view) {
-        startActivity(new Intent(this, TestActivity.class));
+        startActivity(new Intent(this, ProfileActivity.class));
     }
 }
