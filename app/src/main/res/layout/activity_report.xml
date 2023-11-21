@@ -6,20 +6,87 @@
     android:layout_height="match_parent">
 
     <EditText
+        android:id="@+id/zipcode_input"
+        android:layout_width="128dp"
+        android:layout_height="48dp"
+        android:background="#EABFFF"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toTopOf="@+id/report_detail_input"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.451"
+        app:layout_constraintStart_toEndOf="@+id/state_input"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.815" />
+
+    <TextView
+        android:id="@+id/zipcode"
+        android:layout_width="56dp"
+        android:layout_height="21dp"
+        android:text="Zip Code"
+        app:layout_constraintBottom_toTopOf="@+id/zipcode_input"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.579"
+        app:layout_constraintStart_toStartOf="@+id/new_report"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="1.0" />
+
+    <EditText
+        android:id="@+id/state_input"
+        android:layout_width="128dp"
+        android:layout_height="48dp"
+        android:background="#EABFFF"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toTopOf="@+id/report_detail"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="@+id/new_report"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.89" />
+
+    <TextView
+        android:id="@+id/city"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="City"
+        app:layout_constraintBottom_toTopOf="@+id/city_input"
+        app:layout_constraintEnd_toEndOf="@+id/new_report"
+        app:layout_constraintHorizontal_bias="0.036"
+        app:layout_constraintStart_toStartOf="@+id/new_report"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="1.0" />
+
+    <EditText
+        android:id="@+id/city_input"
+        android:layout_width="302dp"
+        android:layout_height="48dp"
+        android:layout_marginTop="184dp"
+        android:background="#EABFFF"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toTopOf="@+id/state"
+        app:layout_constraintEnd_toEndOf="@+id/new_report"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="@+id/new_report"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.61" />
+
+    <EditText
         android:id="@+id/report_detail_input"
-        android:layout_width="310dp"
-        android:layout_height="147dp"
+        android:layout_width="302dp"
+        android:layout_height="144dp"
         android:background="#EABFFF"
         android:hint="Enter details"
         android:selectAllOnFocus="false"
         android:singleLine="false"
         android:textStyle="bold"
         app:layout_constraintBottom_toTopOf="@+id/submit"
-        app:layout_constraintEnd_toEndOf="@+id/new_report"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="@+id/new_report"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.477"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.886"
+        app:layout_constraintVertical_bias="0.948"
         tools:ignore="MissingConstraints" />
 
     <TextView
@@ -31,10 +98,10 @@
         android:textStyle="bold"
         app:layout_constraintBottom_toTopOf="@+id/address"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.157"
+        app:layout_constraintHorizontal_bias="0.161"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.491" />
+        app:layout_constraintVertical_bias="0.517" />
 
     <TextView
         android:id="@+id/address"
@@ -43,12 +110,12 @@
         android:text="Address"
         android:textSize="16sp"
         android:textStyle="bold"
-        app:layout_constraintBottom_toTopOf="@+id/address_input"
+        app:layout_constraintBottom_toTopOf="@+id/street"
         app:layout_constraintEnd_toEndOf="@+id/new_report"
-        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintHorizontal_bias="0.021"
         app:layout_constraintStart_toStartOf="@+id/new_report"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.842" />
+        app:layout_constraintVertical_bias="0.838" />
 
     <Button
         android:id="@+id/submit"
@@ -59,9 +126,10 @@
         android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.819" />
+        app:layout_constraintVertical_bias="0.942" />
 
     <TextView
         android:id="@+id/report_detail"
@@ -72,23 +140,46 @@
         android:textStyle="bold"
         app:layout_constraintBottom_toTopOf="@+id/report_detail_input"
         app:layout_constraintEnd_toEndOf="@+id/new_report"
-        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintHorizontal_bias="0.052"
         app:layout_constraintStart_toStartOf="@+id/new_report"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.91" />
+        app:layout_constraintVertical_bias="0.972" />
 
     <EditText
-        android:id="@+id/address_input"
-        android:layout_width="309dp"
-        android:layout_height="81dp"
+        android:id="@+id/street_address_input"
+        android:layout_width="302dp"
+        android:layout_height="48dp"
         android:background="#EABFFF"
-        android:hint="Enter an address"
         android:textSize="16sp"
         android:textStyle="bold"
-        app:layout_constraintBottom_toTopOf="@+id/report_detail"
+        app:layout_constraintBottom_toTopOf="@+id/city"
         app:layout_constraintEnd_toEndOf="@+id/new_report"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="@+id/new_report"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.804" />
+        app:layout_constraintVertical_bias="0.87" />
+
+    <TextView
+        android:id="@+id/street"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Street Address"
+        app:layout_constraintBottom_toTopOf="@+id/street_address_input"
+        app:layout_constraintEnd_toEndOf="@+id/new_report"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="@+id/new_report"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="1.0" />
+
+    <TextView
+        android:id="@+id/state"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="State"
+        app:layout_constraintBottom_toTopOf="@+id/state_input"
+        app:layout_constraintEnd_toEndOf="@+id/new_report"
+        app:layout_constraintHorizontal_bias="0.027"
+        app:layout_constraintStart_toStartOf="@+id/new_report"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.996" />
 </androidx.constraintlayout.widget.ConstraintLayout>

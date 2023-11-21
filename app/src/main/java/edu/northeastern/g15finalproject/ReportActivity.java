@@ -18,16 +18,23 @@ public class ReportActivity extends AppCompatActivity {
     }
 
     public void addReport(View view) {
-        String address = ((TextView)findViewById(R.id.address_input)).getText().toString();
+        String street_address = ((TextView)findViewById(R.id.street_address_input)).getText().toString();
+        String city = ((TextView)findViewById(R.id.city_input)).getText().toString();
+        String state = ((TextView)findViewById(R.id.state_input)).getText().toString();
+        String zipcode = ((TextView)findViewById(R.id.zipcode_input)).getText().toString();
         String detail = ((TextView)findViewById(R.id.report_detail_input)).getText().toString();
 
-        if (isInputEmpty(address) || isInputEmpty(detail)) {
+        if (isInputEmpty(street_address) || isInputEmpty(detail) || isInputEmpty(city)
+                || isInputEmpty(state) || isInputEmpty(zipcode)) {
             showToast("Address and details cannot be empty");
         } else {
-            Report newReport = new Report(address, detail);
+            Report newReport = new Report(street_address, city, state, zipcode, detail);
             FirebaseDatabase database = FirebaseDatabase.getInstance();
             database.getReference().child("report").push().setValue(newReport);
-            ((TextView) findViewById(R.id.address_input)).setText("");
+            ((TextView) findViewById(R.id.street_address_input)).setText("");
+            ((TextView) findViewById(R.id.city_input)).setText("");
+            ((TextView) findViewById(R.id.state_input)).setText("");
+            ((TextView) findViewById(R.id.zipcode_input)).setText("");
             ((TextView)findViewById(R.id.report_detail_input)).setText("");
         }
 
