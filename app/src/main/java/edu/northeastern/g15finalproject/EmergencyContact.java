@@ -14,4 +14,10 @@ public class EmergencyContact {
 
     @ColumnInfo(name = "phoneNumber")
     public String phoneNumber;
+
+    public EmergencyContact (int uid, String name, String phoneNumber) {
+        this.uid = uid;
+        this.name = name;
+        this.phoneNumber = phoneNumber;
+    }
 }
