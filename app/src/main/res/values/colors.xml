@@ -5,4 +5,5 @@
     <color name="grey">#9B9B9B</color>
     <color name="light_grey">#E0E0E0</color>
     <color name="sos_red">#FF5252</color>
+    <color name="activity_title_color">#5C5C5C</color>
 </resources>

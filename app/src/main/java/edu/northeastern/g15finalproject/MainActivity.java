@@ -333,6 +333,14 @@ public class MainActivity extends AppCompatActivity {
                 }
             });
         }
+
+        // Add listener to the Message Boards button
+        Button messageBoardsButton = findViewById(R.id.message_boards_button);
+        messageBoardsButton.setOnClickListener(view -> {
+            System.out.println("Message Boards Button clicked");
+            Intent intent = new Intent(this, MessageBoardsActivity.class);
+            startActivity(intent);
+        });
     }
 
     private void stopLocationUpdates() {
