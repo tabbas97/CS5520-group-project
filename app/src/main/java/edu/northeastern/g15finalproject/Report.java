@@ -6,6 +6,8 @@ public class Report {
     public String state;
     public String zipcode;
     public String detail;
+    public double longitude;
+    public double latitude;
 
     public Report() {
 
@@ -17,5 +19,7 @@ public class Report {
         this.state = state;
         this.zipcode = zipcode;
         this.detail = detail;
+        this.longitude = -71.057083;
+        this.latitude = 42.361145;
     }
 }
