@@ -1,5 +1,6 @@
 package edu.northeastern.g15finalproject;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class User {
@@ -14,6 +15,8 @@ public class User {
     List<String> emergencyContacts;
 
     public User() {
+        friendsIds = new ArrayList<>();
+        emergencyContacts = new ArrayList<>();
     }
 
     public String getUserName() {
