@@ -1,5 +1,8 @@
 package edu.northeastern.g15finalproject;
 
+//import static edu.northeastern.g15finalproject.ReportActivity.API_KEY;
+//import static edu.northeastern.g15finalproject.ReportActivity.BASE_URL;
+
 import android.os.Bundle;
 import android.util.Log;
 import android.util.MalformedJsonException;
@@ -7,25 +10,27 @@ import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
+import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.database.DataSnapshot;
+
 
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
-import java.net.ProtocolException;
 import java.net.URL;
+import java.util.List;
+import java.util.ArrayList;
 
-import okhttp3.OkHttpClient;
-import okhttp3.Request;
-import okhttp3.Response;
 
 public class ReportActivity extends AppCompatActivity {
     private static final String API_KEY = "40c35a44baff4920bfcd47f63a9d247b";
@@ -52,6 +57,48 @@ public class ReportActivity extends AppCompatActivity {
         new Thread(aThread).start();
 //        System.out.println("long from report: " + longitude);
 
+        //test pull out reports from db
+        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference();
+        DatabaseReference placeReference = databaseReference.child("report");
+
+        String targetZipcode = "02186";
+        Query query = placeReference.orderByChild("zipcode").equalTo(targetZipcode);
+        List<Report> qualifiedObjectsList = new ArrayList<>();
+
+        query.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                // Clear the list to avoid duplicates if the method is called multiple times
+                qualifiedObjectsList.clear();
+
+                // Iterate through the results
+                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                    // Get the object
+
+                    Report archiveReport = snapshot.getValue(Report.class);
+
+//                    YourObject yourObject = snapshot.getValue(YourObject.class);
+
+                    // Add the qualified object to the list
+                    qualifiedObjectsList.add(archiveReport);
+                }
+
+                System.out.println("I am here");
+                // Do something with the list of qualified objects
+                printQualifiedObjects(qualifiedObjectsList);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                Log.e("Firebase", "Error: " + error.getMessage());
+            }
+
+//            @Override
+//            public void onCancelled(DatabaseError databaseError) {
+//                // Handle errors
+//                Log.e("Firebase", "Error: " + databaseError.getMessage());
+//            }
+        });
         if (isInputEmpty(street_address) || isInputEmpty(detail) || isInputEmpty(city)
                 || isInputEmpty(state) || isInputEmpty(zipcode)) {
             showToast("Address and details cannot be empty");
@@ -65,8 +112,24 @@ public class ReportActivity extends AppCompatActivity {
             ((TextView) findViewById(R.id.zipcode_input)).setText("");
             ((TextView)findViewById(R.id.report_detail_input)).setText("");
         }
-
     }
+
+
+    private void printQualifiedObjects(List<Report> qualifiedObjectsList) {
+        // Print the list of qualified objects to the Logcat
+//        for (YourObject yourObject : qualifiedObjectsList) {
+//            Log.d("YourActivity", "Name: " + yourObject.getName() + ", Zipcode: " + yourObject.getZipcode());
+//        }
+        System.out.println("Qualified object list: ");
+        for (Report report : qualifiedObjectsList) {
+            System.out.println(report.city + report.zipcode);
+//            Log.d("YourActivity", "Name: " + report.getName() + ", Zipcode: " + yourObject.getZipcode());
+        }
+    }
+//}
+
+
+
 
     private boolean isInputEmpty(String input) {
         return input.trim().isEmpty();
