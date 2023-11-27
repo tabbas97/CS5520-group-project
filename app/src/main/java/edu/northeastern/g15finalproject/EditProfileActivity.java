@@ -1,6 +1,5 @@
 package edu.northeastern.g15finalproject;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Context;
@@ -11,11 +10,9 @@ import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.Query;
-import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 public class EditProfileActivity extends AppCompatActivity {
 
@@ -48,33 +45,22 @@ public class EditProfileActivity extends AppCompatActivity {
 
     }
 
-    private void getUser(){
-        Log.i("FUUUCK", "HERE1");
-        Query query = FirebaseDatabase.getInstance().getReference()
-                .child("users")
-                .orderByChild("userName")
-                .equalTo(currentUserName);
+    private void getUser() {
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        DocumentReference docRef = db.collection("users").document(currentUserName);
 
-        query.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                if (snapshot.exists()) {
-                    Log.i("FUUUCK", "HERE1");
-                    for (DataSnapshot snap : snapshot.getChildren()) {
-                        Log.i("FUUUCK", "HERE2");
-                        User user = snap.getValue(User.class);
-                        currentUser = user;
-                        loadProfile();
-                    }
+        docRef.get().addOnCompleteListener(task -> {
+            if (task.isSuccessful()) {
+                DocumentSnapshot document = task.getResult();
+                if (document.exists()) {
+                    User user = document.toObject(User.class);
+                    currentUser = user;
+                    loadProfile();
+                } else {
+                    Log.i("FUUUCK", "USER DOESNT EXIST");
                 }
-                else{
-                    Log.i("FUUUCK", "NO SUCH USER EXISTS");
-                }
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-
+            } else {
+                Log.i("FUUUCK", "get failed with ", task.getException());
             }
         });
     }
@@ -93,8 +79,10 @@ public class EditProfileActivity extends AppCompatActivity {
         if(fullN!=currentUser.getFullName() || dob!=currentUser.getDateOfBirth()){
             currentUser.setFullName(fullN);
             currentUser.setDateOfBirth(dob);
-            FirebaseDatabase.getInstance().getReference()
-                    .child("users").child(currentUser.getUserName()).setValue(currentUser);
+
+            FirebaseFirestore.getInstance().collection("users")
+                    .document(currentUser.getUserName())
+                    .set(currentUser);
         }
         startActivity(new Intent(this, ProfileActivity.class));
     }

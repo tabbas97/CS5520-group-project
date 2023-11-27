@@ -1,8 +1,5 @@
 package edu.northeastern.g15finalproject;
 
-import static android.app.PendingIntent.getActivity;
-
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Context;
@@ -12,14 +9,10 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.Query;
-import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.ArrayList;
 
@@ -44,64 +37,50 @@ public class ProfileActivity extends AppCompatActivity {
 
     public void onLoginClick(View view) {
         String username = username_tv.getText().toString();
-        Query query = FirebaseDatabase.getInstance().getReference()
-                .child("users")
-                .orderByChild("userName")
-                .equalTo(username);
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        DocumentReference docRef = db.collection("users").document(username);
 
-        query.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                if (snapshot.exists()) {
-                    for (DataSnapshot snap : snapshot.getChildren()) {
-                        User user = snap.getValue(User.class);
-                        currentUser = user;
-                        loadProfile();
-                    }
+
+        docRef.get().addOnCompleteListener(task -> {
+            if (task.isSuccessful()) {
+                DocumentSnapshot document = task.getResult();
+                if (document.exists()) {
+                    User user = document.toObject(User.class);
+                    currentUser = user;
+                    loadProfile();
+                } else {
+                    Log.i("FUUUCK", "USER DOESNT EXIST");
                 }
-                else{
-                    Log.i("FUUUCK", "NO SUCH USER EXISTS");
-                }
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-
+            } else {
+                Log.i("FUUUCK", "get failed with ", task.getException());
             }
         });
-
     }
 
     public void onRegisterClick(View view) {
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
         String username = username_tv.getText().toString();
-        Query query = FirebaseDatabase.getInstance().getReference()
-                .child("users")
-                .orderByChild("userName")
-                .equalTo(username);
-        query.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                if (snapshot.exists()) {
+        DocumentReference docRef = db.collection("users").document(username);
+        docRef.get().addOnCompleteListener(task -> {
+            if (task.isSuccessful()) {
+                DocumentSnapshot document = task.getResult();
+                if (document.exists()) {
                     Log.i("FUUUCK", "USER ALREADY EXISTS");
-                }
-                else{
-                    Log.i("FUUUCK", "HERE3");
+                } else {
                     User user_reg = new User();
                     user_reg.setUserName(username);
                     user_reg.setFullName("First User");
                     user_reg.setDateOfBirth("1st Jan 1998");
                     user_reg.setPassword("password");
                     user_reg.setFriendsIds(new ArrayList<>());
-                    FirebaseDatabase.getInstance().getReference()
-                            .child("users").child(user_reg.userName).setValue(user_reg);
+
+                    db.collection("users").document(username)
+                            .set(user_reg);
                     currentUser = user_reg;
                     loadProfile();
                 }
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-
+            } else {
+                Log.i("FUUUCK", "get failed with ", task.getException());
             }
         });
     }
@@ -123,11 +102,10 @@ public class ProfileActivity extends AppCompatActivity {
     }
 
     public void editProfileClick(View view){
-        SharedPreferences sharedPref = getSharedPreferences("userdata", Context.MODE_PRIVATE);
         startActivity(new Intent(this, EditProfileActivity.class));
     }
 
     public void goToFriends(View view){
-
+        startActivity(new Intent(this, FriendsActivity.class));
     }
 }
