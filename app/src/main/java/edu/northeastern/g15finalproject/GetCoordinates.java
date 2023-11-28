@@ -29,29 +29,19 @@ public class GetCoordinates extends AsyncTask<String, Void, List<Double>> {
                 InputStream response = connection.getInputStream();
                 java.util.Scanner s = new java.util.Scanner(response).useDelimiter("\\A");
                 String responseString = s.hasNext() ? s.next() : "";
-                // Ensure to close the input stream
                 response.close();
-                // Ensure proper termination of the response string
                 responseString += "\0";
 
-                System.out.println("RESPONSE : " + responseString);
-
                 JSONObject responseJSON = new JSONObject(responseString);
-                System.out.println("JSON: " + responseJSON);
 
                 JSONArray result = responseJSON.getJSONArray("results");
-                System.out.println(result);
+
                 double lat = result.getJSONObject(0).getJSONObject("geometry").getDouble("lat");
                 double lng = result.getJSONObject(0).getJSONObject("geometry").getDouble("lng");
                 this.output.add(lat);
                 this.output.add(lng);
                 return output;
             }
-//            catch (Exception e) {
-//            Log.e("Error: ", "Get Coordinates error");
-//        }
-
-
             return null;
         } catch (ProtocolException e) {
             throw new RuntimeException(e);

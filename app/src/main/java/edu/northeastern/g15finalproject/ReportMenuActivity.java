@@ -15,10 +15,7 @@ public class ReportMenuActivity extends AppCompatActivity {
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-//        getSupportActionBar().setDisplayShowHomeEnabled(true);
     }
-
-//    public boolean onOptionsItemSelected
     public void createReport(View view) {
         startActivity(new Intent(this, ReportActivity.class));
     }
