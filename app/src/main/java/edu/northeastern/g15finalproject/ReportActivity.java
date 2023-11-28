@@ -28,6 +28,7 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.List;
 import java.util.ArrayList;
+import java.util.concurrent.ExecutionException;
 
 
 public class ReportActivity extends AppCompatActivity {
@@ -44,7 +45,7 @@ public class ReportActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
 
-    public void addReport(View view) throws IOException {
+    public void addReport(View view) throws IOException, ExecutionException, InterruptedException {
         String street_address = ((TextView)findViewById(R.id.street_address_input)).getText().toString();
         String city = ((TextView)findViewById(R.id.city_input)).getText().toString();
         String state = ((TextView)findViewById(R.id.state_input)).getText().toString();
@@ -52,6 +53,20 @@ public class ReportActivity extends AppCompatActivity {
         String detail = ((TextView)findViewById(R.id.report_detail_input)).getText().toString();
         String type = ((TextView)findViewById(R.id.type_input)).getText().toString();
         String time = ((TextView)findViewById(R.id.time_input)).getText().toString();
+
+        //TestGetCoordinates
+        String urlstring = String.format("%s?q=%s&key=%s", BASE_URL, Query, API_KEY);
+        GetCoordinates getCoordinates = new GetCoordinates();
+        List<Double> coordinates = getCoordinates.execute(urlstring).get();
+        System.out.println("Coordinates: " + coordinates);
+
+
+
+        ////////////////////
+
+
+
+
 //THREAD is here
 
 //        AThread aThread = new AThread(Query);
@@ -59,49 +74,52 @@ public class ReportActivity extends AppCompatActivity {
 
 
 //        System.out.println("long from report: " + longitude);
-
+///////////////////////////////////////
         //test pull out reports from db
-        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference();
-        DatabaseReference placeReference = databaseReference.child("report");
 
-        String targetZipcode = "02186";
-        Query query = placeReference.orderByChild("zipcode").equalTo(targetZipcode);
-        List<Report> qualifiedObjectsList = new ArrayList<>();
-
-        query.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                // Clear the list to avoid duplicates if the method is called multiple times
-                qualifiedObjectsList.clear();
-
-                // Iterate through the results
-                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                    // Get the object
-
-                    Report archiveReport = snapshot.getValue(Report.class);
-
-//                    YourObject yourObject = snapshot.getValue(YourObject.class);
-
-                    // Add the qualified object to the list
-                    qualifiedObjectsList.add(archiveReport);
-                }
-
-                System.out.println("I am here");
-                // Do something with the list of qualified objects
-                printQualifiedObjects(qualifiedObjectsList);
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-                Log.e("Firebase", "Error: " + error.getMessage());
-            }
-
+//        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference();
+//        DatabaseReference placeReference = databaseReference.child("report");
+//
+//        String targetZipcode = "02186";
+//        Query query = placeReference.orderByChild("zipcode").equalTo(targetZipcode);
+//        List<Report> qualifiedObjectsList = new ArrayList<>();
+//
+//        query.addListenerForSingleValueEvent(new ValueEventListener() {
 //            @Override
-//            public void onCancelled(DatabaseError databaseError) {
-//                // Handle errors
-//                Log.e("Firebase", "Error: " + databaseError.getMessage());
+//            public void onDataChange(DataSnapshot dataSnapshot) {
+//                // Clear the list to avoid duplicates if the method is called multiple times
+//                qualifiedObjectsList.clear();
+//
+//                // Iterate through the results
+//                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+//                    // Get the object
+//
+//                    Report archiveReport = snapshot.getValue(Report.class);
+//
+////                    YourObject yourObject = snapshot.getValue(YourObject.class);
+//
+//                    // Add the qualified object to the list
+//                    qualifiedObjectsList.add(archiveReport);
+//                }
+//
+//                System.out.println("I am here");
+//                // Do something with the list of qualified objects
+//                printQualifiedObjects(qualifiedObjectsList);
 //            }
-        });
+//
+//            @Override
+//            public void onCancelled(@NonNull DatabaseError error) {
+//                Log.e("Firebase", "Error: " + error.getMessage());
+//            }
+//
+////            @Override
+////            public void onCancelled(DatabaseError databaseError) {
+////                // Handle errors
+////                Log.e("Firebase", "Error: " + databaseError.getMessage());
+////            }
+//        });
+
+        /////////////////////////////////////////////////////////////////////////////
 
         //original
         if (isInputEmpty(street_address) || isInputEmpty(detail) || isInputEmpty(city)
