@@ -7,18 +7,11 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 
-import com.google.gson.Gson;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
-
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
 import java.net.URL;
 
 public class MainActivity extends AppCompatActivity {
@@ -44,15 +37,15 @@ public class MainActivity extends AppCompatActivity {
         double des_lat = 40.7128;
         double des_lng = -74.0060;
 
-        TestThread testThread = new TestThread();
-        new Thread(testThread).start();
+//        TestThread testThread = new TestThread();
+//        new Thread(testThread).start();
 
 
 
     }
 
-    public void createReport(View view) {
-        startActivity(new Intent(this, ReportActivity.class));
+    public void report(View view) {
+        startActivity(new Intent(this, ReportMenuActivity.class));
     }
 
 

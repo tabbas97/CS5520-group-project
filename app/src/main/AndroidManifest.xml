@@ -19,6 +19,8 @@
             android:exported="false" />
         <activity android:name=".ReportActivity"
             android:exported="false" />
+        <activity android:name=".ReportMenuActivity"
+            android:exported="false" />
         <activity
             android:name=".MainActivity"
             android:exported="true">

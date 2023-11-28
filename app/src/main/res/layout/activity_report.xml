@@ -95,15 +95,15 @@
         android:layout_height="48dp"
         android:layout_marginTop="184dp"
         android:background="#EABFFF"
+        android:hint="e.g. Boston"
         android:textSize="16sp"
         android:textStyle="bold"
-        android:hint="e.g. Boston"
         app:layout_constraintBottom_toTopOf="@+id/state"
         app:layout_constraintEnd_toEndOf="@+id/new_report"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="@+id/new_report"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.208" />
+        app:layout_constraintVertical_bias="0.716" />
 
     <EditText
         android:id="@+id/report_detail_input"
@@ -134,7 +134,7 @@
         app:layout_constraintHorizontal_bias="0.161"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.517" />
+        app:layout_constraintVertical_bias="1.0" />
 
     <TextView
         android:id="@+id/address"
@@ -159,10 +159,10 @@
         android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.498"
+        app:layout_constraintHorizontal_bias="0.447"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.942" />
+        app:layout_constraintVertical_bias="0.976" />
 
     <TextView
         android:id="@+id/report_detail"

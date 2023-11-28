@@ -51,9 +51,12 @@ public class ReportActivity extends AppCompatActivity {
         String detail = ((TextView)findViewById(R.id.report_detail_input)).getText().toString();
         String type = ((TextView)findViewById(R.id.type_input)).getText().toString();
         String time = ((TextView)findViewById(R.id.time_input)).getText().toString();
+//THREAD is here
 
-        AThread aThread = new AThread(Query);
-        new Thread(aThread).start();
+//        AThread aThread = new AThread(Query);
+//        new Thread(aThread).start();
+
+
 //        System.out.println("long from report: " + longitude);
 
         //test pull out reports from db
