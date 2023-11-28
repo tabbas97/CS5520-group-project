@@ -18,14 +18,15 @@ public class Report {
     }
 
     public Report(String street_address, String city, String state, String zipcode,String detail,
-                  String type, String username, String time, Boolean isTesting) {
+                  String type, String username, String time, Boolean isTesting,
+                  double latitude, double longitude) {
         this.street_address = street_address;
         this.city = city;
         this.state = state;
         this.zipcode = zipcode;
         this.detail = detail;
-        this.longitude = -71.057083;
-        this.latitude = 42.361145;
+        this.longitude = longitude;
+        this.latitude = latitude;
         this.type = type;
         this.username = username;
         this.time = time;

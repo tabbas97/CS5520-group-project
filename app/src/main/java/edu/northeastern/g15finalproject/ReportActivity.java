@@ -54,11 +54,7 @@ public class ReportActivity extends AppCompatActivity {
         String type = ((TextView)findViewById(R.id.type_input)).getText().toString();
         String time = ((TextView)findViewById(R.id.time_input)).getText().toString();
 
-        //TestGetCoordinates
-        String urlstring = String.format("%s?q=%s&key=%s", BASE_URL, Query, API_KEY);
-        GetCoordinates getCoordinates = new GetCoordinates();
-        List<Double> coordinates = getCoordinates.execute(urlstring).get();
-        System.out.println("Coordinates: " + coordinates);
+
 
 
 
@@ -132,8 +128,20 @@ public class ReportActivity extends AppCompatActivity {
 //            String time = "hhmmss";
             Boolean isTesting = true;
 
+            String fullAddress = street_address + ", " + city + ", " + state + ", " + zipcode;
+
+            //TestGetCoordinates
+            String urlstring = String.format("%s?q=%s&key=%s", BASE_URL, fullAddress, API_KEY);
+            GetCoordinates getCoordinates = new GetCoordinates();
+            List<Double> coordinates = getCoordinates.execute(urlstring).get();
+            System.out.println("Coordinates: " + coordinates);
+            double lat = coordinates.get(0);
+            double lng = coordinates.get(1);
+
+
             Report newReport = new Report(street_address, city, state, zipcode,
-                                            detail, type, username, time, isTesting);
+                                            detail, type, username, time,
+                                            isTesting, lat, lng);
             FirebaseDatabase database = FirebaseDatabase.getInstance();
             database.getReference().child("report").push().setValue(newReport);
             ((TextView) findViewById(R.id.street_address_input)).setText("");
