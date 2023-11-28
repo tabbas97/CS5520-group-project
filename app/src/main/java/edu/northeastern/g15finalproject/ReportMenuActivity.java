@@ -1,6 +1,7 @@
 package edu.northeastern.g15finalproject;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.view.View;
 
@@ -15,8 +16,11 @@ public class ReportMenuActivity extends AppCompatActivity {
         setContentView(R.layout.activity_report_menu);
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+//        getSupportActionBar().setDisplayShowHomeEnabled(true);
     }
 
+//    public boolean onOptionsItemSelected
     public void createReport(View view) {
         startActivity(new Intent(this, ReportActivity.class));
     }

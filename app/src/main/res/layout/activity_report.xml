@@ -5,6 +5,22 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolbarNewReport"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#673AB7"
+        android:minHeight="?attr/actionBarSize"
+        android:theme="?attr/actionBarTheme"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.0"
+        app:title="New Report"
+        app:titleTextColor="@color/white" />
+
     <EditText
         android:id="@+id/zipcode_input"
         android:layout_width="128dp"
@@ -25,6 +41,7 @@
         android:layout_width="56dp"
         android:layout_height="21dp"
         android:text="Zip Code"
+        android:textStyle="bold"
         app:layout_constraintBottom_toTopOf="@+id/zipcode_input"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.568"
@@ -82,6 +99,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="City"
+        android:textStyle="bold"
         app:layout_constraintBottom_toTopOf="@+id/city_input"
         app:layout_constraintEnd_toEndOf="@+id/new_report"
         app:layout_constraintHorizontal_bias="0.036"
@@ -116,7 +134,7 @@
         android:textStyle="bold"
         app:layout_constraintBottom_toTopOf="@+id/submit"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.449"
+        app:layout_constraintHorizontal_bias="0.412"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.956"
@@ -127,14 +145,15 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="New Report"
+        android:textColor="#673AB7"
         android:textSize="20sp"
         android:textStyle="bold"
         app:layout_constraintBottom_toTopOf="@+id/address"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.161"
+        app:layout_constraintHorizontal_bias="0.138"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="1.0" />
+        app:layout_constraintVertical_bias="0.0" />
 
     <TextView
         android:id="@+id/address"
@@ -198,6 +217,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Street Address"
+        android:textStyle="bold"
         app:layout_constraintBottom_toTopOf="@+id/street_address_input"
         app:layout_constraintEnd_toEndOf="@+id/new_report"
         app:layout_constraintHorizontal_bias="0.0"
@@ -210,6 +230,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="State"
+        android:textStyle="bold"
         app:layout_constraintBottom_toTopOf="@+id/state_input"
         app:layout_constraintEnd_toEndOf="@+id/new_report"
         app:layout_constraintHorizontal_bias="0.027"
@@ -222,6 +243,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Type"
+        android:textStyle="bold"
         app:layout_constraintBottom_toTopOf="@+id/report_detail"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.524"
@@ -234,6 +256,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Time"
+        android:textStyle="bold"
         app:layout_constraintBottom_toTopOf="@+id/report_detail"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.009"
