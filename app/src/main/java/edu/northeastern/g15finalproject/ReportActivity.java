@@ -1,8 +1,5 @@
 package edu.northeastern.g15finalproject;
 
-//import static edu.northeastern.g15finalproject.ReportActivity.API_KEY;
-//import static edu.northeastern.g15finalproject.ReportActivity.BASE_URL;
-
 import android.os.Bundle;
 import android.util.Log;
 import android.util.MalformedJsonException;
@@ -52,6 +49,8 @@ public class ReportActivity extends AppCompatActivity {
         String state = ((TextView)findViewById(R.id.state_input)).getText().toString();
         String zipcode = ((TextView)findViewById(R.id.zipcode_input)).getText().toString();
         String detail = ((TextView)findViewById(R.id.report_detail_input)).getText().toString();
+        String type = ((TextView)findViewById(R.id.type_input)).getText().toString();
+        String time = ((TextView)findViewById(R.id.time_input)).getText().toString();
 
         AThread aThread = new AThread(Query);
         new Thread(aThread).start();
@@ -99,11 +98,20 @@ public class ReportActivity extends AppCompatActivity {
 //                Log.e("Firebase", "Error: " + databaseError.getMessage());
 //            }
         });
+
+        //original
         if (isInputEmpty(street_address) || isInputEmpty(detail) || isInputEmpty(city)
-                || isInputEmpty(state) || isInputEmpty(zipcode)) {
+                || isInputEmpty(state) || isInputEmpty(zipcode)
+                || isInputEmpty(type) || isInputEmpty(time)) {
             showToast("Address and details cannot be empty");
         } else {
-            Report newReport = new Report(street_address, city, state, zipcode, detail);
+//            String type = "test type";
+            String username = "test username";
+//            String time = "hhmmss";
+            Boolean isTesting = true;
+
+            Report newReport = new Report(street_address, city, state, zipcode,
+                                            detail, type, username, time, isTesting);
             FirebaseDatabase database = FirebaseDatabase.getInstance();
             database.getReference().child("report").push().setValue(newReport);
             ((TextView) findViewById(R.id.street_address_input)).setText("");
@@ -111,6 +119,8 @@ public class ReportActivity extends AppCompatActivity {
             ((TextView) findViewById(R.id.state_input)).setText("");
             ((TextView) findViewById(R.id.zipcode_input)).setText("");
             ((TextView)findViewById(R.id.report_detail_input)).setText("");
+            ((TextView)findViewById(R.id.time_input)).setText("");
+            ((TextView)findViewById(R.id.type_input)).setText("");
         }
     }
 
@@ -122,7 +132,7 @@ public class ReportActivity extends AppCompatActivity {
 //        }
         System.out.println("Qualified object list: ");
         for (Report report : qualifiedObjectsList) {
-            System.out.println(report.city + report.zipcode);
+            System.out.println(report.getCity() + report.getZipcode());
 //            Log.d("YourActivity", "Name: " + report.getName() + ", Zipcode: " + yourObject.getZipcode());
         }
     }
