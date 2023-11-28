@@ -298,6 +298,10 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    public void report(View view) {
+        startActivity(new Intent(MainActivity.this, ReportMenuActivity.class));
+    }
+
     public void testFB(View view) {
         startActivity(new Intent(this, ProfileActivity.class));
     }

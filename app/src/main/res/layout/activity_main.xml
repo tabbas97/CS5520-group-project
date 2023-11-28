@@ -106,7 +106,9 @@
             android:text="Reports"
             android:textColor="@color/white"
             android:textSize="10sp"
+            android:onClick="report"
             app:backgroundTint="#A5ACB2"
+
             />
 
         <!-- Add an empty button that will be the spaceholder for a floating action button -->
