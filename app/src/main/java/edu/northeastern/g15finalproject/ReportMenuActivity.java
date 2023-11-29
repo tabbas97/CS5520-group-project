@@ -19,4 +19,8 @@ public class ReportMenuActivity extends AppCompatActivity {
     public void createReport(View view) {
         startActivity(new Intent(this, ReportActivity.class));
     }
+
+    public void showReportNearby(View view) {
+        startActivity(new Intent(this, ReportNearbyActivity.class));
+    }
 }

@@ -23,6 +23,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Nearby report"
+        android:onClick="showReportNearby"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="@+id/newReport"
         app:layout_constraintHorizontal_bias="0.523"

@@ -76,4 +76,8 @@ public class Report {
     public Boolean getTesting() {
         return this.isTesting;
     }
+
+    public String getFullAddress() {
+        return street_address + ", " + city + ", " + state + ", " + zipcode;
+    }
 }
