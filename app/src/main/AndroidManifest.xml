@@ -50,6 +50,12 @@
         <activity
             android:name=".ProfileActivity"
             android:exported="false" />
+        <activity android:name=".ReportActivity"
+            android:exported="false"
+            android:parentActivityName=".ReportMenuActivity"/>
+        <activity android:name=".ReportMenuActivity"
+            android:exported="false"
+            android:parentActivityName=".MainActivity"/>
         <activity
             android:name=".TestActivity"
             android:exported="false" />
