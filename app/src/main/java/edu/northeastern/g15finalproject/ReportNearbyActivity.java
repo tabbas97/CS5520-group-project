@@ -32,75 +32,10 @@ public class ReportNearbyActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-
-        //test list view
-
         String currentZip = "96768";
-
-//        String time[] = {"One", "Two", "Three", "Four", "Five", "Six", "Seven", "Eight"};
-//        String type[] = {"Type 1", "Type 2", "Type 3", "Type 4", "Type 5", "Type 6", "Type 7", "Type 8"};
-//        String address[] = {"Address 1", "Address 2", "Address 3", "Address 4", "Address 5", "Address 6", "Address 7", "Address 8"};
-//
-//        List<Report> reportList = new ArrayList<>();
-//        Report report1 = new Report("test", "test", "test", "test", "test",
-//                "test", "test", "test", true, 40.000, -70.000);
-//        Report report2 = new Report("test2", "test2", "test2", "test2", "test2",
-//                "test2", "test2", "test2", true, 40.000, -70.000);
-//        Report report3 = new Report("test3", "test3", "test3", "test3", "test3",
-//                "test3", "test3", "test3", true, 40.000, -70.000);
-
-//        List<Report> reports = getNearbyReport(currentZip);
+        String testZip = "02148";
         List<Report> reports = new ArrayList<>();
-        CompletableFuture<List<Report>> futureReports = getNearbyReport(currentZip);
-//        List<Report> reports = futureReports.join();
-
-//        reportList.add(report1);
-//        reportList.add(report2);
-//        reportList.add(report3);
-//        try {
-//            reports = new AsyncTask<Void, Void, List<Report>>() {
-//
-//                @Override
-//                protected List<Report> doInBackground(Void... voids) {
-//                    System.out.println("future reports: " + futureReports.join());
-//
-//                    return futureReports.join();
-//                }
-//            }.execute().get();
-//        } catch (Exception e) {
-//            Log.e("ReportNearbyActivity", "error in converting reports");
-//        }
-
-//        catch (InterruptedException e) {
-//            throw new RuntimeException(e);
-//        }
-
-//        new AsyncTask<Void, Void, List<Report>>() {
-//
-//            @Override
-//            protected List<Report> doInBackground(Void... voids) {
-//
-//                return futureReports.join();
-//            }
-//        }.execute();
-//
-//
-//        executeAsyncTask(futureReports, new TaskCallback() {
-//            @Override
-//            public void onTaskComplete(List<Report> result) {
-//                List<Report> nearbyReports = result;
-//                System.out.println("reports from onTaskComplete: " + reports);
-//                ListView listView = findViewById(R.id.customListView);
-////        NearbyReportAdapter nearbyReportAdapter =
-////                new NearbyReportAdapter(getApplicationContext(), time, type, address);
-//
-//                NearbyReportAdapter nearbyReportAdapter =
-//                        new NearbyReportAdapter(getApplicationContext(), reports);
-//                listView.setAdapter(nearbyReportAdapter);
-//            }
-//        });
-
-//        System.out.println();
+        CompletableFuture<List<Report>> futureReports = getNearbyReport(testZip);
 
          executeAsyncTask(futureReports, new TaskCallback() {
             @Override
@@ -108,39 +43,6 @@ public class ReportNearbyActivity extends AppCompatActivity {
                 nearbyReports = result;
             }
         });
-
-//        new AsyncTask<Void, Void, List<Report>>() {
-//                @Override
-//                protected List<Report> doInBackground(Void... voids) {
-//                    System.out.println("future reports: " + futureReports.join());
-//                    nearbyReports = futureReports.join();
-//                    return futureReports.join();
-//                }
-//
-//                @Override
-//                protected void onPostExecute(List<Report> result) {
-//                    // Call the callback with the result
-//                    callback.onTaskComplete(result);
-//
-//                    // Save the result to the nearbyReports variable
-//                    nearbyReports = result;
-//                }
-//            }.execute();
-
-
-
-        ////////////********************************************************
-//        System.out.println("reports from main: " + nearbyReports);
-////        System.out.println("reports address from main: " + reports.get(0).getFullAddress());
-//        ListView listView = findViewById(R.id.customListView);
-////        NearbyReportAdapter nearbyReportAdapter =
-////                new NearbyReportAdapter(getApplicationContext(), time, type, address);
-//
-//        NearbyReportAdapter nearbyReportAdapter =
-//                new NearbyReportAdapter(getApplicationContext(), reports);
-//        listView.setAdapter(nearbyReportAdapter);
-        ////////////********************************************************
-
     }
 
     public CompletableFuture<List<Report>>  getNearbyReport(String zipcode) {
@@ -165,8 +67,8 @@ public class ReportNearbyActivity extends AppCompatActivity {
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                     // Get the object
 
-                    System.out.println("snapshot");
-                    System.out.println(snapshot);
+//                    System.out.println("snapshot");
+//                    System.out.println(snapshot);
 
                     Report archiveReport = snapshot.getValue(Report.class);
 
@@ -189,9 +91,6 @@ public class ReportNearbyActivity extends AppCompatActivity {
             }
         });
         return future;
-
-        /////////////////////////////////////////////////////////////////////////////
-//        return qualifiedObjectsList;
     }
 
     private void printQualifiedObjects(List<Report> qualifiedObjectsList) {
@@ -238,20 +137,5 @@ public class ReportNearbyActivity extends AppCompatActivity {
             }
         }.execute();
     }
-
-//    private void executeAsyncTask(CompletableFuture<List<Report>> futureReports, TaskCallback callback) {
-//        new AsyncTask<Void, Void, List<Report>>() {
-//            @Override
-//            protected List<Report> doInBackground(Void... voids) {
-//                return futureReports.join();
-//            }
-//
-//            @Override
-//            protected void onPostExecute(List<Report> result) {
-//                // Call the callback with the result
-//                callback.onTaskComplete(result);
-//            }
-//        }.execute();
-//    }
 
 }
