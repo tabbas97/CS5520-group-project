@@ -79,6 +79,10 @@ public class FriendsActivity extends AppCompatActivity {
     }
 
     private void getFriends() {
+        if (currentUser.getFriendsIds().size() == 0){
+            return;
+        }
+
         FirebaseFirestore db = FirebaseFirestore.getInstance();
 
         CollectionReference friendsRef = db.collection("users");

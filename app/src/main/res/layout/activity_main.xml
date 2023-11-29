@@ -129,17 +129,17 @@
             />
 
         <Button
+            android:id="@+id/profile_settings_button"
             android:layout_width="80dp"
             android:layout_height="wrap_content"
-            android:id="@+id/profile_settings_button"
             android:layout_margin="5dp"
             android:clickable="true"
             android:focusable="true"
+            android:onClick="profileClick"
             android:text="Profile"
             android:textColor="@color/white"
             android:textSize="10sp"
-            app:backgroundTint="#A5ACB2"
-            />
+            app:backgroundTint="#A5ACB2" />
 
         <!--  Settings button -->
         <Button

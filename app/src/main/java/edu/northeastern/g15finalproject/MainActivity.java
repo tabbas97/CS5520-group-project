@@ -302,7 +302,7 @@ public class MainActivity extends AppCompatActivity {
         startActivity(new Intent(MainActivity.this, ReportMenuActivity.class));
     }
 
-    public void testFB(View view) {
+    public void profileClick(View view) {
         startActivity(new Intent(this, ProfileActivity.class));
     }
 }
