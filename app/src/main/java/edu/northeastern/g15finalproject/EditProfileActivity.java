@@ -76,10 +76,20 @@ public class EditProfileActivity extends AppCompatActivity {
     public void saveProfile(View view) {
         String fullN = edit_fullname.getText().toString();
         String dob = edit_dob.getText().toString();
-        if(fullN!=currentUser.getFullName() || dob!=currentUser.getDateOfBirth()){
+        boolean toChange = false;
+        if(!fullN.equals("") && fullN!=currentUser.getFullName()){
             currentUser.setFullName(fullN);
-            currentUser.setDateOfBirth(dob);
+            toChange = true;
+        }
 
+        if(!dob.equals("") && dob!=currentUser.getDateOfBirth()){
+            currentUser.setDateOfBirth(dob);
+            toChange = true;
+        }
+
+
+
+        if(toChange){
             FirebaseFirestore.getInstance().collection("users")
                     .document(currentUser.getUserName())
                     .set(currentUser);
