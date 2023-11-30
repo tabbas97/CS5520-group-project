@@ -37,6 +37,8 @@ public class ReportNearbyActivity extends AppCompatActivity {
 
         String currentZip = "96768";
 
+        String testZip = "02148";
+
 //        String time[] = {"One", "Two", "Three", "Four", "Five", "Six", "Seven", "Eight"};
 //        String type[] = {"Type 1", "Type 2", "Type 3", "Type 4", "Type 5", "Type 6", "Type 7", "Type 8"};
 //        String address[] = {"Address 1", "Address 2", "Address 3", "Address 4", "Address 5", "Address 6", "Address 7", "Address 8"};
@@ -51,7 +53,7 @@ public class ReportNearbyActivity extends AppCompatActivity {
 
 //        List<Report> reports = getNearbyReport(currentZip);
         List<Report> reports = new ArrayList<>();
-        CompletableFuture<List<Report>> futureReports = getNearbyReport(currentZip);
+        CompletableFuture<List<Report>> futureReports = getNearbyReport(testZip);
 //        List<Report> reports = futureReports.join();
 
 //        reportList.add(report1);

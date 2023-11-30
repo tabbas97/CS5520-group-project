@@ -52,7 +52,7 @@ public class ReportActivity extends AppCompatActivity {
         String zipcode = ((TextView)findViewById(R.id.zipcode_input)).getText().toString();
         String detail = ((TextView)findViewById(R.id.report_detail_input)).getText().toString();
         String type = ((TextView)findViewById(R.id.type_input)).getText().toString();
-        String time = ((TextView)findViewById(R.id.time_input)).getText().toString();
+        Long time = Long.valueOf(((TextView)findViewById(R.id.time_input)).getText().toString());
 
 
 
@@ -120,7 +120,7 @@ public class ReportActivity extends AppCompatActivity {
         //original
         if (isInputEmpty(street_address) || isInputEmpty(detail) || isInputEmpty(city)
                 || isInputEmpty(state) || isInputEmpty(zipcode)
-                || isInputEmpty(type) || isInputEmpty(time)) {
+                || isInputEmpty(type) || isInputEmpty(String.valueOf(time))) {
             showToast("Address and details cannot be empty");
         } else {
 //            String type = "test type";
