@@ -10,7 +10,7 @@ public class Report {
     private double latitude;
     private String type;
     private String username;
-    private String time;
+    private Long time;
     private Boolean isTesting;
 
     public Report() {
@@ -18,7 +18,7 @@ public class Report {
     }
 
     public Report(String street_address, String city, String state, String zipcode, String detail,
-                  String type, String username, String time, Boolean isTesting,
+                  String type, String username, Long time, Boolean isTesting,
                   double latitude, double longitude) {
         this.street_address = street_address;
         this.city = city;
@@ -69,11 +69,15 @@ public class Report {
         return this.username;
     }
 
-    public String getTime() {
+    public Long getTime() {
         return this.time;
     }
 
     public Boolean getTesting() {
         return this.isTesting;
+    }
+
+    public String getFullAddress() {
+        return street_address + ", " + city + ", " + state + ", " + zipcode;
     }
 }
