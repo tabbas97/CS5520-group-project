@@ -18,10 +18,13 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.maps.model.TileOverlay;
+import com.google.maps.android.heatmaps.HeatmapTileProvider;
 
 public class MainScreenMapFragment extends Fragment {
 
     GoogleMap map =  null;
+    TileOverlay heatmapOverlay = null;
     Boolean userLocationMapSync = true;
     Location lastSetLocation = null;
 
@@ -131,5 +134,11 @@ public class MainScreenMapFragment extends Fragment {
         }
     }
 
-
+    public void setHeatmap(HeatmapTileProvider heatmapTileProvider) {
+        System.out.println("Setting heatmap");
+        heatmapOverlay = map.addTileOverlay(new com.google.android.gms.maps.model.TileOverlayOptions().tileProvider(heatmapTileProvider));
+        heatmapOverlay.setVisible(true);
+        heatmapOverlay.clearTileCache();
+        System.out.println("Heatmap set");
+    }
 }

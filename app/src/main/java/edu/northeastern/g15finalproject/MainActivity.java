@@ -1,11 +1,15 @@
 package edu.northeastern.g15finalproject;
 
+import static edu.northeastern.g15finalproject.Helpers.HeatmapHelper.transformReports;
+import static edu.northeastern.g15finalproject.Helpers.HeatmapHelper.transformReportsToHeatmapTileProvider;
+
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.room.Room;
 
+import android.Manifest;
 import android.content.Context;
 import android.os.VibrationEffect;
 import android.os.Vibrator;
@@ -35,9 +39,20 @@ import com.google.android.gms.location.LocationCallback;
 
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.firebase.Firebase;
+import com.google.firebase.FirebaseApp;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.maps.android.heatmaps.HeatmapTileProvider;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.atomic.AtomicReference;
+
+import edu.northeastern.g15finalproject.DataClasses.Report;
+import edu.northeastern.g15finalproject.Helpers.HeatmapHelper;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -54,6 +69,8 @@ public class MainActivity extends AppCompatActivity {
     EmergencyContactDao emergencyContactDao = null;
 
     List<EmergencyContact> emergencyContacts = null;
+
+    boolean isSOSButtonEnabled = false;
 
     enum RequestCode {
         BASIC_PERMISSION_MISSING_ACTIVITY(1);
@@ -74,6 +91,19 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        FirebaseApp.initializeApp(this);
+
+        // Check for all three permissions
+        if (
+                (ContextCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) ||
+                (ContextCompat.checkSelfPermission(this, android.Manifest.permission.SEND_SMS) != PackageManager.PERMISSION_GRANTED) ||
+                (ContextCompat.checkSelfPermission(this, android.Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED)
+        ) {
+            this.isSOSButtonEnabled = false;
+        } else {
+            this.isSOSButtonEnabled = true;
+        }
+
         // Check for location permission
         // If permission is not granted, request it
         if (ContextCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION)
@@ -85,7 +115,23 @@ public class MainActivity extends AppCompatActivity {
                     1);
         }
 
-        // TODO: Add code to check for location permission
+        // Check for text message permission
+        // Check for emergency call permission
+        // If permission is not granted, request it
+        if (
+                (ContextCompat.checkSelfPermission(this, android.Manifest.permission.SEND_SMS) != PackageManager.PERMISSION_GRANTED) ||
+                (ContextCompat.checkSelfPermission(this, android.Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED)
+        ) {
+            // Permission is not granted
+            // Request permission
+            ActivityCompat.requestPermissions(this,
+                    new String[]{
+                            android.Manifest.permission.SEND_SMS,
+                            Manifest.permission.CALL_PHONE,
+                    },
+                    1);
+        }
+
         if (ContextCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION)
                 == PackageManager.PERMISSION_GRANTED) {
             fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
@@ -104,28 +150,6 @@ public class MainActivity extends AppCompatActivity {
                 System.out.println("Failed to get location");
             });
 
-        }
-
-        // Check for text message permission
-        // If permission is not granted, request it
-        if (ContextCompat.checkSelfPermission(this, android.Manifest.permission.SEND_SMS)
-                != PackageManager.PERMISSION_GRANTED) {
-            // Permission is not granted
-            // Request permission
-            ActivityCompat.requestPermissions(this,
-                    new String[]{android.Manifest.permission.SEND_SMS},
-                    1);
-        }
-
-        // Check for emergency call permission
-        // If permission is not granted, request it
-        if (ContextCompat.checkSelfPermission(this, android.Manifest.permission.CALL_PHONE)
-                != PackageManager.PERMISSION_GRANTED) {
-            // Permission is not granted
-            // Request permission
-            ActivityCompat.requestPermissions(this,
-                    new String[]{android.Manifest.permission.CALL_PHONE},
-                    1);
         }
 
         Fragment mapFragment = new MainScreenMapFragment();
@@ -341,6 +365,58 @@ public class MainActivity extends AppCompatActivity {
             Intent intent = new Intent(this, MessageBoardsActivity.class);
             startActivity(intent);
         });
+
+        // Background thread to get all the reports, get the locations of the reports, and the types of the reports
+        // From firebase rtdb
+        Thread thread = new Thread(() -> {
+            // Get all the reports
+            List<Report> reports = new ArrayList<Report>();
+
+            // Get reportsref from firebase
+            FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
+            DatabaseReference reportsRef = firebaseDatabase.getReferenceFromUrl(getString(R.string.firebase_database_url) + "/report");
+
+            System.out.println("Reports ret THREAD: " + reportsRef.toString());
+
+            reportsRef.get().addOnSuccessListener(task -> {
+                System.out.println("Reports ret THREAD : Reports: " + task.getValue());
+
+                if (task.getValue() == null) {
+                    System.out.println("Reports ret THREAD : No reports");
+                    return;
+                }
+
+                // Get the reports hashmap
+                Map<String, Object> allReportsMap = (Map<String, Object>) task.getValue();
+
+                List<Report> allReports = HeatmapHelper.transformReports(allReportsMap);
+
+                // Get the locations of the reports
+                HeatmapTileProvider heatmapTileProvider = transformReportsToHeatmapTileProvider(allReports);
+
+                System.out.println("Reports ret THREAD : Ready to Update map fragment");
+
+                runOnUiThread(
+                        () -> {
+                            System.out.println("Reports ret UITHREAD : Updating map fragment");
+                            // Update the map fragment
+                            ((MainScreenMapFragment) mapFragment).setHeatmap(heatmapTileProvider);
+                        }
+                );
+
+            }).addOnFailureListener(task -> {
+                System.out.println("Reports ret BUILDER THREAD : Failed to get reports");
+            });
+
+
+
+
+            // Get the types of the reports
+
+        });
+
+        thread.start();
+
     }
 
     private void stopLocationUpdates() {

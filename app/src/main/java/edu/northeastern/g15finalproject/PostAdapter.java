@@ -26,11 +26,22 @@ public class PostAdapter extends RecyclerView.Adapter<MessageBoardItemHolder> {
 
     @Override
     public void onBindViewHolder(MessageBoardItemHolder holder, int position) {
-        holder.postHeadline.setText("Headline");
-        holder.postTitle.setText("Title");
-        holder.postTime.setText("Time");
-        holder.postNumComments.setText("Comments");
-        holder.postNumPlusOne.setText("Plus One");
+        // Set the values of the post at the given position
+        holder.postHeadline.setText(posts.get(position).getPostHeadline());
+        holder.postTitle.setText(posts.get(position).getPostTitle());
+        holder.postTime.setText(posts.get(position).getPostTime());
+        holder.postNumComments.setText(posts.get(position).getPostNumComments());
+        holder.postNumPlusOne.setText(posts.get(position).getPostNumPlusOne());
+
+        holder.itemView.setOnClickListener(view -> {
+            // Launch the post in activity own post activity
+            android.content.Intent intent = new android.content.Intent(context, MessageBoardOwnPostActivity.class);
+
+            // Place the post id about the post in the intent
+            intent.putExtra("postID", posts.get(position).getPostID());
+
+            context.startActivity(intent);
+        });
     }
 
     @Override
