@@ -1,9 +1,14 @@
 package edu.northeastern.g15finalproject;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
+import androidx.annotation.NonNull;
+
 import java.util.ArrayList;
 import java.util.List;
 
-public class User {
+public class User implements Parcelable{
 
     String userName;
     String password;
@@ -18,6 +23,27 @@ public class User {
         friendsIds = new ArrayList<>();
         emergencyContacts = new ArrayList<>();
     }
+
+    protected User(Parcel in) {
+        userName = in.readString();
+        password = in.readString();
+        fullName = in.readString();
+        dateOfBirth = in.readString();
+        friendsIds = in.createStringArrayList();
+        emergencyContacts = in.createStringArrayList();
+    }
+
+    public static final Creator<User> CREATOR = new Creator<User>() {
+        @Override
+        public User createFromParcel(Parcel in) {
+            return new User(in);
+        }
+
+        @Override
+        public User[] newArray(int size) {
+            return new User[size];
+        }
+    };
 
     public String getUserName() {
         return userName;
@@ -65,5 +91,20 @@ public class User {
 
     public void setEmergencyContacts(List<String> emergencyContacts) {
         this.emergencyContacts = emergencyContacts;
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(@NonNull Parcel dest, int flags) {
+        dest.writeString(userName);
+        dest.writeString(password);
+        dest.writeString(fullName);
+        dest.writeString(dateOfBirth);
+        dest.writeStringList(friendsIds);
+        dest.writeStringList(emergencyContacts);
     }
 }
