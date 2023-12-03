@@ -1,6 +1,7 @@
 package edu.northeastern.g15finalproject;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.SearchView;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
@@ -8,6 +9,8 @@ import androidx.fragment.app.Fragment;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.location.Address;
+import android.location.Geocoder;
 import android.location.Location;
 import android.net.Uri;
 import android.os.Bundle;
@@ -42,6 +45,8 @@ public class MainActivity extends AppCompatActivity {
     Location mapLocation;
     String locationLabel = "You are here";
     Boolean userLocationMapViewSync = true;
+
+    SearchView searchLocation;
 
     enum RequestCode {
         BASIC_PERMISSION_MISSING_ACTIVITY(1);
@@ -186,19 +191,40 @@ public class MainActivity extends AppCompatActivity {
             buttonView.setVisibility(View.INVISIBLE);
         });
 
-        FloatingActionButton fab = findViewById(R.id.floating_search_button);
-        EditText searchEditText = findViewById(R.id.search_bar);
-        fab.setOnClickListener(view -> {
-            System.out.println("Floating action button clicked");
-            System.out.println(searchEditText.getVisibility());
-            if (searchEditText.getVisibility() == EditText.INVISIBLE || searchEditText.getVisibility() == EditText.GONE) {
-                System.out.println("Setting visibility to visible");
-                searchEditText.setVisibility(View.VISIBLE);
-            } else {
-                System.out.println("Setting visibility to invisible");
-                searchEditText.setVisibility(View.INVISIBLE);
+        searchLocation = findViewById(R.id.searchview_bar);
+        searchLocation.setOnClickListener(v -> searchLocation.setIconified(false));
+        searchLocation.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                String location = searchLocation.getQuery().toString();
+                List<Address> addressList = null;
+                if(location != null){
+                    Geocoder geocoder = new Geocoder(MainActivity.this);
+                    try{
+                        addressList = geocoder.getFromLocationName(location,1);
+
+                    }
+                    catch (Exception e){
+
+                    }
+
+                    Address address = addressList.get(0);
+//                    Location newLocation = new Location("");
+//                    newLocation.setLatitude(address.getLatitude());
+//                    newLocation.setLongitude(address.getLongitude());
+                    LatLng latlng = new LatLng(address.getLatitude(), address.getLongitude());
+                    ((MainScreenMapFragment) mapFragment).updateMapLocation(latlng);
+
+                }
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                return false;
             }
         });
+
 
         // SOS Button listener
         FloatingActionButton sosButton = findViewById(R.id.sos_button);

@@ -116,6 +116,11 @@ public class MainScreenMapFragment extends Fragment {
         }
     }
 
+    public void updateMapLocation(LatLng latlng){
+        map.addMarker(new MarkerOptions().position(latlng).title("You are here"));
+        map.animateCamera(CameraUpdateFactory.newLatLngZoom(latlng, 17));
+    }
+
     public void stopLocationTracking() {
         userLocationMapSync = false;
     }

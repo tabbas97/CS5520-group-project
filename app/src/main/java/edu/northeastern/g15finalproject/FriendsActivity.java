@@ -11,6 +11,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
@@ -73,14 +74,12 @@ public class FriendsActivity extends AppCompatActivity {
 
         allFriendsRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         allFriendsRecyclerView.setAdapter(friendsRVAdapter);
-
     }
 
 
     private void getUser(){
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         DocumentReference docRef = db.collection("users").document(currentUserName);
-
 
         docRef.get().addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
@@ -90,10 +89,12 @@ public class FriendsActivity extends AppCompatActivity {
                     currentUser = user;
                     getFriends();
                 } else {
-                    Log.i("FUUUCK", "USER DOESNT EXIST");
+                    Toast.makeText(this, "This User does not exist",
+                            Toast.LENGTH_SHORT).show();
                 }
             } else {
-                Log.i("FUUUCK", "get failed with ", task.getException());
+                Toast.makeText(this, "Issues getting this user, please try again later",
+                        Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -114,25 +115,27 @@ public class FriendsActivity extends AppCompatActivity {
                 friends.clear();
                 for (QueryDocumentSnapshot snap : document) {
                     User userTemp = snap.toObject(User.class);
-                    Log.i("FUUUCK FRENS", userTemp.getUserName());
                     friends.add(userTemp);
                 }
-                Log.i("FUUUCK FRENS", ""+friends.size());
                 allFriendsRecyclerView.getAdapter().notifyDataSetChanged();
             } else {
-                Log.i("FUUUCK", "get failed with ", task.getException());
+                Toast.makeText(this, "Issues getting your friends, please try again later",
+                        Toast.LENGTH_SHORT).show();
             }
         });
-
     }
 
     public void addFriendClick(View view) {
-        Log.i("FUUUCK", "HERE1");
         String friend_username = friend_un.getText().toString().trim();
         if(friend_username == ""){
             return;
         }
-        Log.i("FUUUCK", "HERE2 " + friend_username);
+        for(User f:friends){
+            if(f.getUserName().equals(friend_username)){
+                Toast.makeText(this, "This User is already a friend",
+                        Toast.LENGTH_SHORT).show();
+            }
+        }
 
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         DocumentReference docRef = db.collection("users").document(currentUserName);
@@ -147,10 +150,12 @@ public class FriendsActivity extends AppCompatActivity {
                             .set(currentUser);
                     getFriends();
                 } else {
-                    Log.i("FUUUCK", "USER DOESNT EXIST");
+                    Toast.makeText(this, "This User does not exist",
+                            Toast.LENGTH_SHORT).show();
                 }
             } else {
-                Log.i("FUUUCK", "get failed with ", task.getException());
+                Toast.makeText(this, "Issues adding this friend, please try again later",
+                        Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -176,6 +181,10 @@ public class FriendsActivity extends AppCompatActivity {
         String username = friends.get(position).getUserName();
         currentUser.getFriendsIds().remove(username);
         friends.remove(position);
+        if(currentUser.getEmergencyContacts().contains(username)){
+            currentUser.getEmergencyContacts().remove(username);
+        }
+
         FirebaseFirestore.getInstance().collection("users")
                 .document(currentUser.getUserName())
                 .set(currentUser);

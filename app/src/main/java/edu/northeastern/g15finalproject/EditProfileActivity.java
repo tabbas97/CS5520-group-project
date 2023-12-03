@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -34,10 +35,10 @@ public class EditProfileActivity extends AppCompatActivity {
         SharedPreferences sharedPref = getSharedPreferences("userdata", Context.MODE_PRIVATE);
         currentUserName = sharedPref.getString("currentUserName", null);
 
-        Log.i("FUUUCK", "EP US:" + currentUserName);
-
         if(currentUserName == null){
-            Log.i("FUUUCK", "USER NOT FOUND ON EDIT PAGE");
+            Toast.makeText(this, "This User does not exist",
+                    Toast.LENGTH_SHORT).show();
+            startActivity(new Intent(this, ProfileActivity.class));
         }
         else{
             getUser();
@@ -57,17 +58,18 @@ public class EditProfileActivity extends AppCompatActivity {
                     currentUser = user;
                     loadProfile();
                 } else {
-                    Log.i("FUUUCK", "USER DOESNT EXIST");
+                    Toast.makeText(this, "This User does not exist",
+                            Toast.LENGTH_SHORT).show();
                 }
             } else {
-                Log.i("FUUUCK", "get failed with ", task.getException());
+                Toast.makeText(this, "Issues getting user, please try again later",
+                        Toast.LENGTH_SHORT).show();
             }
         });
     }
 
     private void loadProfile(){
         if(currentUser != null){
-            Log.i("FUUUCK", "GOT USER");
             edit_fullname.setHint(currentUser.getFullName());
             edit_dob.setHint(currentUser.getDateOfBirth());
         }
