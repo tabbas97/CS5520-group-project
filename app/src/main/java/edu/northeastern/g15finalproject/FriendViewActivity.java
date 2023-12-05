@@ -1,13 +1,14 @@
 package edu.northeastern.g15finalproject;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -49,15 +50,19 @@ public class FriendViewActivity extends AppCompatActivity {
                     friend = user;
                     loadProfile();
                 } else {
-                    Log.i("FUUUCK", "USER DOESNT EXIST");
+                    Toast.makeText(this, "User does not exist",
+                            Toast.LENGTH_SHORT).show();
                 }
             } else {
-                Log.i("FUUUCK", "get failed with ", task.getException());
+                Toast.makeText(this, "Issues getting this user, please try again later",
+                        Toast.LENGTH_SHORT).show();
             }
         });
     }
 
     private void loadProfile(){
+        Toolbar toolbar = findViewById(R.id.fv_toolbar);
+        toolbar.setTitle(friendUserName+ " Profile");
         fv_full_name_tv.setText(friend.getFullName());
         fv_dob_tv.setText(friend.getDateOfBirth());
         if(currentUser.getFriendsIds().contains(friendUserName)){
@@ -80,10 +85,12 @@ public class FriendViewActivity extends AppCompatActivity {
                             .set(currentUser);
                     startActivity(new Intent(this, FriendsActivity.class));
                 } else {
-                    Log.i("FUUUCK", "USER DOESNT EXIST");
+                    Toast.makeText(this, "User does not exist",
+                            Toast.LENGTH_SHORT).show();
                 }
             } else {
-                Log.i("FUUUCK", "get failed with ", task.getException());
+                Toast.makeText(this, "Issues getting this user, please try again later",
+                        Toast.LENGTH_SHORT).show();
             }
         });
     }

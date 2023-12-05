@@ -6,6 +6,22 @@
     android:layout_height="match_parent"
     tools:context=".EditProfileActivity">
 
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/ep_toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#673AB7"
+        android:minHeight="?attr/actionBarSize"
+        android:theme="?attr/actionBarTheme"
+        app:title="Edit Profile"
+        app:titleTextColor="@color/white"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.0" />
+
     <TextView
         android:id="@+id/name_label"
         android:layout_width="wrap_content"
@@ -15,7 +31,7 @@
         android:text="Name:"
         android:textSize="20sp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toBottomOf="@+id/ep_toolbar" />
 
     <TextView
         android:id="@+id/dob_label"
@@ -38,7 +54,7 @@
         android:inputType="text"
         android:textSize="20sp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toBottomOf="@+id/ep_toolbar" />
 
     <EditText
         android:id="@+id/edit_dob"

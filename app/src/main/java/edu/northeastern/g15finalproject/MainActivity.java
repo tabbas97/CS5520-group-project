@@ -17,9 +17,7 @@ import android.os.Bundle;
 import android.os.Looper;
 import android.view.View;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.Toast;
-import android.widget.ToggleButton;
 
 // Import location services
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -33,7 +31,6 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.List;
-import java.util.concurrent.atomic.AtomicReference;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -207,14 +204,14 @@ public class MainActivity extends AppCompatActivity {
                     catch (Exception e){
 
                     }
-
-                    Address address = addressList.get(0);
+                    if (addressList!=null && addressList.size()>0){
+                        Address address = addressList.get(0);
 //                    Location newLocation = new Location("");
 //                    newLocation.setLatitude(address.getLatitude());
 //                    newLocation.setLongitude(address.getLongitude());
-                    LatLng latlng = new LatLng(address.getLatitude(), address.getLongitude());
-                    ((MainScreenMapFragment) mapFragment).updateMapLocation(latlng);
-
+                        LatLng latlng = new LatLng(address.getLatitude(), address.getLongitude());
+                        ((MainScreenMapFragment) mapFragment).updateMapLocation(latlng);
+                    }
                 }
                 return false;
             }

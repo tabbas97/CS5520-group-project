@@ -6,7 +6,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -96,6 +95,8 @@ public class EditProfileActivity extends AppCompatActivity {
                     .document(currentUser.getUserName())
                     .set(currentUser);
         }
-        startActivity(new Intent(this, ProfileActivity.class));
+        Intent intent = new Intent(this, ProfileActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        startActivity(intent);
     }
 }

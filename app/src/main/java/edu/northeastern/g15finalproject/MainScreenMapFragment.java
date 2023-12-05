@@ -10,7 +10,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.ToggleButton;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -101,24 +100,27 @@ public class MainScreenMapFragment extends Fragment {
             return;
         }
 
-        if (lastSetLocation == null) {
-            lastSetLocation = location;
-            map.clear();
-            LatLng showLocation = new LatLng(location.getLatitude(), location.getLongitude());
-            map.addMarker(new MarkerOptions().position(showLocation).title("You are here"));
-            map.animateCamera(CameraUpdateFactory.newLatLngZoom(showLocation, 17));
-        } else if (location.distanceTo(lastSetLocation) > 2){
-            map.clear();
-            lastSetLocation = location;
-            LatLng showLocation = new LatLng(location.getLatitude(), location.getLongitude());
-            map.addMarker(new MarkerOptions().position(showLocation).title("You are here"));
-            map.animateCamera(CameraUpdateFactory.newLatLngZoom(showLocation, 17));
+        if (lastSetLocation == null || location.distanceTo(lastSetLocation) > 2) {
+            if(map!=null){
+                lastSetLocation = location;
+                map.clear();
+                LatLng showLocation = new LatLng(location.getLatitude(), location.getLongitude());
+                map.addMarker(new MarkerOptions().position(showLocation).title("You are here"));
+                map.animateCamera(CameraUpdateFactory.newLatLngZoom(showLocation, 17));
+            }
         }
     }
 
     public void updateMapLocation(LatLng latlng){
-        map.addMarker(new MarkerOptions().position(latlng).title("You are here"));
-        map.animateCamera(CameraUpdateFactory.newLatLngZoom(latlng, 17));
+//        Location l = new Location("");
+//        l.setLatitude(latlng.latitude);
+//        l.setLongitude(latlng.longitude);
+//        updateMapLocation(l);
+        if(map!=null){
+            map.clear();
+            map.addMarker(new MarkerOptions().position(latlng).title("You are here"));
+            map.animateCamera(CameraUpdateFactory.newLatLngZoom(latlng, 17));
+        }
     }
 
     public void stopLocationTracking() {
