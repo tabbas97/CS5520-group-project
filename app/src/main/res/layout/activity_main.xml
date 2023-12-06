@@ -7,65 +7,30 @@
     tools:context=".MainActivity">
 
     <!--    Add the map fragment to main screen -->
-        <fragment
-            android:id="@+id/map_fragment"
-            android:name="com.google.android.gms.maps.SupportMapFragment"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_margin="5dp"
-            />
 
-    <RelativeLayout
-        android:layout_width="wrap_content"
+    <fragment
+        android:id="@+id/map_fragment"
+        android:name="com.google.android.gms.maps.SupportMapFragment"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_margin="5dp"
+        tools:layout_editor_absoluteX="-7dp"
+        tools:layout_editor_absoluteY="90dp" />
+
+    <androidx.appcompat.widget.SearchView
+        android:id="@+id/searchview_bar"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="20dp"
-        android:clickable="true"
-        android:focusable="true"
-        android:visibility="visible"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintLeft_toLeftOf="parent"
-        android:id="@+id/search_bar_layout"
-        >
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginEnd="20dp"
+        android:background="@drawable/rounded_edit_text"
+        app:defaultQueryHint="Search for a place"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
 
-        <!--  Place a edit text search bar in front of the search button  -->
-        <EditText
-            android:id="@+id/search_bar"
-            android:layout_width="300sp"
-            android:layout_height="wrap_content"
-            android:layout_alignTop="@+id/floating_search_button"
-            android:layout_alignBottom="@id/floating_search_button"
-            android:layout_marginLeft="10dp"
-            android:layout_marginRight="10dp"
-            android:layout_toEndOf="@+id/floating_search_button"
-            android:background="@drawable/rounded_edit_text"
-            android:clickable="true"
-            android:focusable="true"
-            android:hint="   Search for a place"
-            android:inputType="text"
-            android:textColor="@color/black"
-            android:textColorHint="@color/black"
-            android:textSize="20sp"
-            android:visibility="visible"
-            app:backgroundTint="@color/white"
-            />
-
-        <!--   Add a floating search button that switches to a search bar when clicked -->
-        <com.google.android.material.floatingactionbutton.FloatingActionButton
-            android:id="@+id/floating_search_button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:clickable="true"
-            android:focusable="true"
-            android:src="@drawable/ic_search"
-            android:background="@drawable/search_background"
-            app:backgroundTint="@color/white"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.0" />
-    </RelativeLayout>
+    </androidx.appcompat.widget.SearchView>
 
     <!--   Add a toggle button that switches on or off map user loc syncing-->
     <Button
@@ -106,7 +71,9 @@
             android:text="Reports"
             android:textColor="@color/white"
             android:textSize="10sp"
-            app:backgroundTint="@color/material_dynamic_neutral_variant70"
+            android:onClick="report"
+            app:backgroundTint="#A5ACB2"
+
             />
 
         <!-- Add an empty button that will be the spaceholder for a floating action button -->
@@ -131,17 +98,17 @@
             />
 
         <Button
+            android:id="@+id/profile_settings_button"
             android:layout_width="80dp"
             android:layout_height="wrap_content"
-            android:id="@+id/profile_settings_button"
             android:layout_margin="5dp"
             android:clickable="true"
             android:focusable="true"
+            android:onClick="profileClick"
             android:text="Profile"
             android:textColor="@color/white"
             android:textSize="10sp"
-            app:backgroundTint="@color/material_dynamic_neutral_variant70"
-            />
+            app:backgroundTint="#A5ACB2" />
 
         <!--  Settings button -->
         <Button
@@ -154,7 +121,7 @@
             android:text="Settings"
             android:textColor="@color/white"
             android:textSize="10sp"
-            app:backgroundTint="@color/material_dynamic_neutral_variant70"
+            app:backgroundTint="#A5ACB2"
             />
 
     </LinearLayout>
@@ -192,4 +159,3 @@
         app:layout_constraintVertical_bias="0.95" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
-

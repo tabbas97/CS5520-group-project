@@ -4,6 +4,7 @@ import static edu.northeastern.g15finalproject.Helpers.HeatmapHelper.transformRe
 import static edu.northeastern.g15finalproject.Helpers.HeatmapHelper.transformReportsToHeatmapTileProvider;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.SearchView;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
@@ -18,6 +19,8 @@ import androidx.room.RoomDatabase;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.location.Address;
+import android.location.Geocoder;
 import android.location.Location;
 import android.net.Uri;
 import android.os.Bundle;
@@ -25,9 +28,7 @@ import android.os.Looper;
 import android.telephony.SmsManager;
 import android.view.View;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.Toast;
-import android.widget.ToggleButton;
 
 // Import location services
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -49,7 +50,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.atomic.AtomicReference;
 
 import edu.northeastern.g15finalproject.DataClasses.Report;
 import edu.northeastern.g15finalproject.Helpers.HeatmapHelper;
@@ -71,6 +71,8 @@ public class MainActivity extends AppCompatActivity {
     List<EmergencyContact> emergencyContacts = null;
 
     boolean isSOSButtonEnabled = false;
+
+    SearchView searchLocation;
 
     enum RequestCode {
         BASIC_PERMISSION_MISSING_ACTIVITY(1);
@@ -223,17 +225,37 @@ public class MainActivity extends AppCompatActivity {
             buttonView.setVisibility(View.INVISIBLE);
         });
 
-        FloatingActionButton fab = findViewById(R.id.floating_search_button);
-        EditText searchEditText = findViewById(R.id.search_bar);
-        fab.setOnClickListener(view -> {
-            System.out.println("Floating action button clicked");
-            System.out.println(searchEditText.getVisibility());
-            if (searchEditText.getVisibility() == EditText.INVISIBLE || searchEditText.getVisibility() == EditText.GONE) {
-                System.out.println("Setting visibility to visible");
-                searchEditText.setVisibility(View.VISIBLE);
-            } else {
-                System.out.println("Setting visibility to invisible");
-                searchEditText.setVisibility(View.INVISIBLE);
+        searchLocation = findViewById(R.id.searchview_bar);
+        searchLocation.setOnClickListener(v -> searchLocation.setIconified(false));
+        searchLocation.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                String location = searchLocation.getQuery().toString();
+                List<Address> addressList = null;
+                if(location != null){
+                    Geocoder geocoder = new Geocoder(MainActivity.this);
+                    try{
+                        addressList = geocoder.getFromLocationName(location,1);
+
+                    }
+                    catch (Exception e){
+
+                    }
+                    if (addressList!=null && addressList.size()>0){
+                        Address address = addressList.get(0);
+//                    Location newLocation = new Location("");
+//                    newLocation.setLatitude(address.getLatitude());
+//                    newLocation.setLongitude(address.getLongitude());
+                        LatLng latlng = new LatLng(address.getLatitude(), address.getLongitude());
+                        ((MainScreenMapFragment) mapFragment).updateMapLocation(latlng);
+                    }
+                }
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                return false;
             }
         });
 
@@ -463,5 +485,13 @@ public class MainActivity extends AppCompatActivity {
         } else {
             System.out.println("Request code not OK. Proceeding without SOS support");
         }
+    }
+
+    public void report(View view) {
+        startActivity(new Intent(MainActivity.this, ReportMenuActivity.class));
+    }
+
+    public void profileClick(View view) {
+        startActivity(new Intent(this, ProfileActivity.class));
     }
 }

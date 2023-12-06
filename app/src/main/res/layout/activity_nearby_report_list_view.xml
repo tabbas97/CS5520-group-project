@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:layout_margin="10dp">
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/time_card"
+        android:text="time is here"
+        android:layout_margin="8dp"
+        android:textStyle="bold"
+        android:textSize="16dp"
+        />
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/type_card"
+        android:text="Type is here"
+        android:layout_margin="8dp"
+        android:textStyle="bold"
+        android:textSize="16dp"
+        />
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/address_card"
+        android:text="Address is here"
+        android:layout_margin="8dp"
+        android:textStyle="bold"
+        android:textSize="16dp"
+        />
+
+</LinearLayout>

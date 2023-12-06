@@ -8,8 +8,9 @@
 
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
-    <uses-permission android:name="android.permission.CALL_PHONE" />
+    <uses-permission android:name="android.permission.CALL_PHONE"  />
     <uses-permission android:name="android.permission.SEND_SMS" />
+    <uses-permission android:name="android.permission.INTERNET"  />
     <uses-permission android:name="android.permission.VIBRATE" />
 
     <application
@@ -35,6 +36,12 @@
             android:name=".MessageBoardsActivity"
             android:exported="false" />
         <activity
+            android:name=".FriendViewActivity"
+            android:exported="false" />
+        <activity
+            android:name=".RegisterActivity"
+            android:exported="false" />
+        <activity
             android:name=".BasicPermissionMissingActivity"
             android:exported="false" />
         <!--
@@ -52,6 +59,30 @@
             android:name="com.google.android.geo.API_KEY"
             android:value="AIzaSyAkYWNRL4dC-W7NUkuqepu7WxXZ2w00NDM" />
 
+        <activity
+            android:name=".FriendsActivity"
+            android:exported="false" />
+        <activity
+            android:name=".EditProfileActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ProfileActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ReportActivity"
+            android:exported="false"
+            android:parentActivityName=".ReportMenuActivity" />
+        <activity
+            android:name=".ReportMenuActivity"
+            android:exported="false"
+            android:parentActivityName=".MainActivity" />
+        <activity
+            android:name=".ReportNearbyActivity"
+            android:exported="false"
+            android:parentActivityName=".ReportMenuActivity" />
+        <activity
+            android:name=".TestActivity"
+            android:exported="false" />
         <activity
             android:name=".MainActivity"
             android:exported="true">
