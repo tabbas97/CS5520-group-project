@@ -2,6 +2,7 @@ import math
 import firebase_admin
 import firebase_admin.credentials as credentials
 from firebase_admin import db
+from tqdm import tqdm
 
 firebase_admin.initialize_app(
     credential=credentials.Certificate('group15finalproj-9916e796488c.json')
@@ -118,8 +119,9 @@ class GoogleAddress:
     def __str__(self):
         return self.formatted_address + ' ' + str(self.latitude) + ' ' + str(self.longitude)
 
+from geopy.extra.rate_limiter import RateLimiter
 
-for i in range(100):
+for i in tqdm(range(2000)):
 
     # if i == 5:
     #     break
@@ -129,11 +131,12 @@ for i in range(100):
 
     # Get the address of the report
     locator = geopy.GoogleV3(api_key=geoCodeKey)
-    location = locator.reverse(str(randomLat) + ', ' + str(randomLong))
+    reverse = RateLimiter(locator.reverse, min_delay_seconds=0.1)
+    location = reverse(str(randomLat) + ', ' + str(randomLong))
     address = GoogleAddress(location)
 
-    print(address.get_city())
-    print(address.get_state())
+    # print(address.get_city())
+    # print(address.get_state())
 
     report = {
         'city': address.get_city(),
@@ -158,6 +161,6 @@ for i in range(100):
     # Push the report to the database
     report_ref.push(report)
     # report_ref.child('report' + str(i)).set(report)
-    print(json.dumps(report, indent=2))
+    # print(json.dumps(report, indent=2))
 
 # Print the reports in the database

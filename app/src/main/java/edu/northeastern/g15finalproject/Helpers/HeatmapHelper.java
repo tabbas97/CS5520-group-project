@@ -80,9 +80,10 @@ public class HeatmapHelper {
                 double latitude = report.latitude;
                 double longitude = report.longitude;
 
+                System.out.println("Reports ret THREAD : Intensity: " + report.getIntensity());
                 // Create a weighted latlng object
                 WeightedLatLng weightedLatLng = new WeightedLatLng(
-                        new com.google.android.gms.maps.model.LatLng(latitude, longitude), 3
+                        new com.google.android.gms.maps.model.LatLng(latitude, longitude), report.getIntensity()
                 );
 
                 // Add the weighted lat-lng to the list
@@ -104,7 +105,7 @@ public class HeatmapHelper {
 
         // start points for the gradient
         float[] startPoints = {
-                0f, 3f
+                1f, 3f
         };
 
         System.out.println("Returning heatmap tile provider");
@@ -112,8 +113,8 @@ public class HeatmapHelper {
         try {
             heatmapTileProvider = new HeatmapTileProvider.Builder()
                     .weightedData(weightedLatLngs)
-                    .gradient(new Gradient(colors, startPoints))
-                    .radius(30)
+                    .opacity(1)
+                    .maxIntensity(3)
                     .build();
             System.out.println("Created heatmap tile provider");
         } catch (Exception e) {

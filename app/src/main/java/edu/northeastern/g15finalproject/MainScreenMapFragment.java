@@ -104,6 +104,10 @@ public class MainScreenMapFragment extends Fragment {
             return;
         }
 
+        if (heatmapOverlay != null) {
+            heatmapOverlay.clearTileCache();
+        }
+
         if (lastSetLocation == null) {
             lastSetLocation = location;
             map.clear();
@@ -139,6 +143,7 @@ public class MainScreenMapFragment extends Fragment {
         heatmapOverlay = map.addTileOverlay(new com.google.android.gms.maps.model.TileOverlayOptions().tileProvider(heatmapTileProvider));
         heatmapOverlay.setVisible(true);
         heatmapOverlay.clearTileCache();
+        System.out.println("IS VISIBLE : " + heatmapOverlay.isVisible());
         System.out.println("Heatmap set");
     }
 }

@@ -393,23 +393,23 @@ public class MainActivity extends AppCompatActivity {
 
                 // Get the locations of the reports
                 HeatmapTileProvider heatmapTileProvider = transformReportsToHeatmapTileProvider(allReports);
+                System.out.println("HMT Data" + heatmapTileProvider.getTile(0, 0, 0).data.length);
 
                 System.out.println("Reports ret THREAD : Ready to Update map fragment");
+
+                ((MainScreenMapFragment) mapFragment).setHeatmap(heatmapTileProvider);
 
                 runOnUiThread(
                         () -> {
                             System.out.println("Reports ret UITHREAD : Updating map fragment");
                             // Update the map fragment
-                            ((MainScreenMapFragment) mapFragment).setHeatmap(heatmapTileProvider);
+                            // ((MainScreenMapFragment) mapFragment).setHeatmap(heatmapTileProvider);
                         }
                 );
 
             }).addOnFailureListener(task -> {
                 System.out.println("Reports ret BUILDER THREAD : Failed to get reports");
             });
-
-
-
 
             // Get the types of the reports
 
