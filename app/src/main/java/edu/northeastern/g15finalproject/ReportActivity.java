@@ -1,5 +1,6 @@
 package edu.northeastern.g15finalproject;
 
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.TextView;
@@ -22,7 +23,6 @@ import java.util.concurrent.ExecutionException;
 public class ReportActivity extends AppCompatActivity {
     private static final String API_KEY = "40c35a44baff4920bfcd47f63a9d247b";
     private static final String BASE_URL = "https://api.opencagedata.com/geocode/v1/json";
-    private static final String Query = "New York";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,7 +33,7 @@ public class ReportActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
 
-    public void addReport(View view) throws IOException, ExecutionException, InterruptedException {
+    public void addReport(View view) throws ExecutionException, InterruptedException {
         String street_address = ((TextView)findViewById(R.id.street_address_input)).getText().toString();
         String city = ((TextView)findViewById(R.id.city_input)).getText().toString();
         String state = ((TextView)findViewById(R.id.state_input)).getText().toString();
@@ -59,7 +59,7 @@ public class ReportActivity extends AppCompatActivity {
             showToast("Address and details cannot be empty");
         } else {
             if (isTimeFormatCorrect) {
-                String username = "test username";
+                String username = getCurrentloginUsername();
                 Boolean isTesting = true;
 
                 String fullAddress = street_address + ", " + city + ", " + state + ", " + zipcode;
@@ -87,8 +87,6 @@ public class ReportActivity extends AppCompatActivity {
                 ((TextView)findViewById(R.id.time_input)).setText("");
                 ((TextView)findViewById(R.id.type_input)).setText("");
             }
-            //Todo: update username and istesting info according to current user log in
-
         }
     }
 
@@ -120,6 +118,13 @@ public class ReportActivity extends AppCompatActivity {
         }
         long currentTimestamp = System.currentTimeMillis();
         return currentTimestamp;
+    }
+
+    private String getCurrentloginUsername() {
+        SharedPreferences preferences = getSharedPreferences("user_prefs", MODE_PRIVATE);
+        String loggedInUsername = preferences.getString("username", "default_value_if_not_found");
+        System.out.println("loggedin username: " +loggedInUsername);
+        return loggedInUsername;
     }
 
 }
