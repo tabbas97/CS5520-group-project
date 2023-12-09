@@ -7,7 +7,10 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
+import java.util.TimeZone;
 
 public class NearbyReportAdapter extends BaseAdapter {
     Context context;
@@ -68,12 +71,24 @@ public class NearbyReportAdapter extends BaseAdapter {
         TextView time_tv = convertView.findViewById(R.id.time_card);
         TextView type_tv = convertView.findViewById(R.id.type_card);
         TextView address_tv = convertView.findViewById(R.id.address_card);
-        time_tv.setText("Time: " + reportList.get(position).getTime());
+        String formattedTime = convertUTCStampBackToReadable(reportList.get(position).getTime());
+        time_tv.setText("Time: " + formattedTime);
+//        time_tv.setText("Time: " + convertUTCStampBackToReadable(reportList.get(position).getTime()));
+//        time_tv.setText("Time: " + reportList.get(position).getTime());
         type_tv.setText("Type: " + reportList.get(position).getType());
         address_tv.setText("Address: " + reportList.get(position).getFullAddress());
 //        time_tv.setText(time[position]);
 //        type_tv.setText(type[position]);
 //        address_tv.setText(type[position]);
         return convertView;
+    }
+
+    public String convertUTCStampBackToReadable(long time) {
+        Date utcDate = new Date(time);
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss z");
+        dateFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
+        String formattedUtcTime = dateFormat.format(utcDate);
+
+        return formattedUtcTime;
     }
 }

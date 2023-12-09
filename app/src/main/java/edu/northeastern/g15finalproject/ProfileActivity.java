@@ -62,6 +62,12 @@ public class ProfileActivity extends AppCompatActivity {
                     User user = document.toObject(User.class);
                     currentUser = user;
                     loadProfile();
+
+                    SharedPreferences preferences = getSharedPreferences("user_prefs", MODE_PRIVATE);
+                    SharedPreferences.Editor editor = preferences.edit();
+                    editor.putString("username", user.getUserName());
+                    editor.apply();
+
                 } else {
                     Toast.makeText(this, "This User does not exist",
                             Toast.LENGTH_SHORT).show();
