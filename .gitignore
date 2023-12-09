@@ -33,3 +33,5 @@ google-services.json
 *.hprof
 aux_scripts/group15finalproj-9916e796488c.json
 aux_scripts/geo_coding_key.json
+aux_scripts/s.ipynb
+group15finalproj*export*.json

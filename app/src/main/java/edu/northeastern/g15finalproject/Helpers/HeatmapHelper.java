@@ -1,5 +1,8 @@
 package edu.northeastern.g15finalproject.Helpers;
 
+import android.location.Location;
+
+import com.google.android.gms.maps.model.LatLng;
 import com.google.maps.android.heatmaps.Gradient;
 import com.google.maps.android.heatmaps.HeatmapTileProvider;
 import com.google.maps.android.heatmaps.WeightedLatLng;
@@ -8,6 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import edu.northeastern.g15finalproject.DataClasses.CustomWeightedLatLong;
 import edu.northeastern.g15finalproject.DataClasses.Report;
 
 public class HeatmapHelper {
@@ -62,7 +66,103 @@ public class HeatmapHelper {
         return reports;
     }
 
-    public static HeatmapTileProvider transformReportsToHeatmapTileProvider(List<Report> reports) {
+    private static float getDistance(LatLng latLng1, LatLng latLng2) {
+        // Get the distance between two latlngs
+        Location location1 = new Location("");
+        location1.setLatitude(latLng1.latitude);
+        location1.setLongitude(latLng1.longitude);
+
+        Location location2 = new Location("");
+        location2.setLatitude(latLng2.latitude);
+        location2.setLongitude(latLng2.longitude);
+
+        return location1.distanceTo(location2);
+    }
+
+    private static int getMatchingLatLng(List<CustomWeightedLatLong> prevSet, LatLng latLng) {
+        // Iterate through the previous set of weighted latlngs
+        for (int i = 0; i < prevSet.size(); i++) {
+            // Get the weighted latlng
+            CustomWeightedLatLong weightedLatLong = prevSet.get(i);
+
+            // Get the latlng
+            LatLng prevLatLng = new LatLng(weightedLatLong.getLatitude(), weightedLatLong.getLongitude());
+
+            // Check if they are close enough
+            if (getDistance(prevLatLng, latLng) < 0.0001) {
+                // Return the index of the matching latlng
+                return i;
+            }
+        }
+
+        // Return -1 if no matching latlng was found
+        return -1;
+    }
+
+    public static List<CustomWeightedLatLong> makeWeightedLatLongs(List<Report> allReports, List<CustomWeightedLatLong> previousSet) {
+        List<CustomWeightedLatLong> weightedLatLngs = new ArrayList<>();
+
+        if (allReports == null) {
+            System.out.println("Reports ret THREAD : No reports found");
+            throw new IllegalArgumentException("Reports ret THREAD : No reports found");
+        }
+
+        // Iterate through the reports hashmap
+        for (Report report : allReports) {
+            // Try catch block to catch the case where the report is null or invalid format
+            try {
+                // Get the report attributes
+                double latitude = report.latitude;
+                double longitude = report.longitude;
+
+                // Get the matching latlng index
+                int matchingLatLngIndex = getMatchingLatLng(previousSet, new LatLng(latitude, longitude));
+
+                // Check if there is a matching latlng
+                if (matchingLatLngIndex != -1) {
+                    // Get the matching latlng
+                    CustomWeightedLatLong matchingLatLng = previousSet.get(matchingLatLngIndex);
+
+                    // Update the matching latlng's weight
+                    matchingLatLng.setWeight(matchingLatLng.getWeight() + report.getIntensity());
+
+                    // Update the matching latlng in the previous set
+                    previousSet.set(matchingLatLngIndex, matchingLatLng);
+                } else {
+                    // Create a weighted latlng object
+                    CustomWeightedLatLong weightedLatLng = new CustomWeightedLatLong(latitude, longitude, report.getIntensity());
+
+                    // Add the weighted lat-lng to the list
+                    weightedLatLngs.add(weightedLatLng);
+                }
+            }
+            catch (Exception e) {
+                System.out.println("Reports ret THREAD : Failed to parse report");
+                System.out.println("Reports ret THREAD : Failed Report: " + report);
+                e.printStackTrace();
+            }
+
+        }
+        return weightedLatLngs;
+    }
+
+    private static List<WeightedLatLng> convertCustomWeightedLatLongs2WeightedLatLngs(List<CustomWeightedLatLong> customWeightedLatLongs) {
+        List<WeightedLatLng> weightedLatLngs = new ArrayList<>();
+
+        // Iterate through the custom weighted latlngs
+        for (CustomWeightedLatLong customWeightedLatLong : customWeightedLatLongs) {
+            // Create a weighted latlng object
+            WeightedLatLng weightedLatLng = new WeightedLatLng(
+                    new com.google.android.gms.maps.model.LatLng(customWeightedLatLong.getLatitude(), customWeightedLatLong.getLongitude()), customWeightedLatLong.getWeight());
+
+            // Add the weighted lat-lng to the list
+            weightedLatLngs.add(weightedLatLng);
+        }
+
+        return weightedLatLngs;
+    }
+
+    public static HeatmapTileProvider transformReportsToHeatmapTileProvider(List<Report> reports, List<CustomWeightedLatLong> previousSet) {
         HeatmapTileProvider heatmapTileProvider = null;
 
         if (reports == null) {
@@ -70,32 +170,16 @@ public class HeatmapHelper {
             throw new IllegalArgumentException("Reports ret THREAD : No reports found");
         }
 
-        List<WeightedLatLng> weightedLatLngs = new ArrayList<>();
-
-        // Iterate through the reports hashmap
-        for (Report report : reports) {
-            // Try catch block to catch the case where the report is null or invalid format
-            try {
-                // Get the report attributes
-                double latitude = report.latitude;
-                double longitude = report.longitude;
-
-                System.out.println("Reports ret THREAD : Intensity: " + report.getIntensity());
-                // Create a weighted latlng object
-                WeightedLatLng weightedLatLng = new WeightedLatLng(
-                        new com.google.android.gms.maps.model.LatLng(latitude, longitude), report.getIntensity()
-                );
-
-                // Add the weighted lat-lng to the list
-                weightedLatLngs.add(weightedLatLng);
-
-                System.out.println("Reports ret THREAD : Report: " + report);
-            } catch (Exception e) {
-                System.out.println("Reports ret THREAD : Failed to parse report");
-                System.out.println("Reports ret THREAD : Failed Report: " + report);
-                e.printStackTrace();
-            }
+        if (previousSet == null) {
+            // Computing for the first time or the previous set is expired
+            previousSet = makeWeightedLatLongs(reports, new ArrayList<>());
+        } else {
+            // Update the previous set
+            previousSet = makeWeightedLatLongs(reports, previousSet);
         }
+
+        // Convert the custom weighted latlngs to weighted latlngs
+        List<WeightedLatLng> weightedLatLngs = convertCustomWeightedLatLongs2WeightedLatLngs(previousSet);
 
         // gradient for the heatmap
         int[] colors = {

@@ -22,6 +22,7 @@ public class ProfileActivity extends AppCompatActivity {
     TextView username_tv;
     TextView full_name_tv;
     TextView dob_tv;
+    boolean firstLogin = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,6 +30,7 @@ public class ProfileActivity extends AppCompatActivity {
 
         SharedPreferences sharedPref = getSharedPreferences("userdata", Context.MODE_PRIVATE);
         currentUserName = sharedPref.getString("currentUserName", null);
+        firstLogin = getIntent().getBooleanExtra("firstLogin", false);
 
         if(currentUserName == null){
             setContentView(R.layout.login_activity);
@@ -37,6 +39,14 @@ public class ProfileActivity extends AppCompatActivity {
         else{
             setContentView(R.layout.activity_profile);
             getLoggedInUser();
+        }
+
+        if(firstLogin){
+            Toast.makeText(this, "Registration enables all features",
+                    Toast.LENGTH_SHORT).show();
+
+            SharedPreferences.Editor editor = sharedPref.edit();
+            editor.putBoolean("firstLoginAttempted", true);
         }
     }
 

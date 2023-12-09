@@ -4,6 +4,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
+import android.annotation.SuppressLint;
 import android.location.Location;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -15,17 +16,22 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.UiSettings;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.TileOverlay;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.maps.android.heatmaps.HeatmapTileProvider;
 
 public class MainScreenMapFragment extends Fragment {
 
     GoogleMap map =  null;
     TileOverlay heatmapOverlay = null;
+    HeatmapTileProvider heatmapTileProvider = null;
     Boolean userLocationMapSync = true;
     Location lastSetLocation = null;
+
+    FloatingActionButton reCenterButton = null;
 
     private OnMapReadyCallback callback = new OnMapReadyCallback() {
 
@@ -38,17 +44,25 @@ public class MainScreenMapFragment extends Fragment {
          * install it inside the SupportMapFragment. This method will only be triggered once the
          * user has installed Google Play services and returned to the app.
          */
+        @SuppressLint("MissingPermission")
         @Override
         public void onMapReady(GoogleMap googleMap) {
 
             // Set map
             map = googleMap;
+            map.setMyLocationEnabled(true);
             // Print the calling object
             System.out.println("CallingObject" + this);
+
+            reCenterButton = getActivity().findViewById(R.id.location_recenter_button);
 
             // Get bundle from MainScreenFragment
             Bundle bundle = getArguments();
             System.out.println(bundle);
+
+            UiSettings uiSettings = map.getUiSettings();
+            uiSettings.setMyLocationButtonEnabled(false);
+            uiSettings.setCompassEnabled(true);
 
             Location mapLocation = bundle.getParcelable("mapLocation");
 
@@ -59,19 +73,28 @@ public class MainScreenMapFragment extends Fragment {
             // zoom level as close as possible
             googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(showLocation, 17));
 
-            googleMap.setOnCameraMoveListener(() -> {
-                    System.out.println("Camera moved");
-                    Button toggleButton = getActivity().findViewById(R.id.toggle_button);
-                    // If the center of current view is not the same as the location of the user
-                    // then show the toggle button
-                    if (lastSetLocation != null && (googleMap.getCameraPosition().target.latitude != lastSetLocation.getLatitude() ||
-                            googleMap.getCameraPosition().target.longitude != lastSetLocation.getLongitude())) {
-                        toggleButton.setVisibility(toggleButton.VISIBLE);
-                    } else {
-                        toggleButton.setVisibility(toggleButton.INVISIBLE);
+            // Set the toggle button to invisible
+            reCenterButton.setVisibility(reCenterButton.INVISIBLE);
+
+            // Set the toggle button to visible when the camera is moved and the center of the view is not the same as the user's location
+            googleMap.setOnCameraMoveListener(new GoogleMap.OnCameraMoveListener() {
+                @Override
+                public void onCameraMove() {
+
+                    Location userLocation = googleMap.getMyLocation();
+                    if (userLocation != null) {
+                        LatLng centerLatLng = googleMap.getCameraPosition().target;
+                        Location centerLocation = new Location("");
+                        centerLocation.setLatitude(centerLatLng.latitude);
+                        centerLocation.setLongitude(centerLatLng.longitude);
+                        if (userLocation.distanceTo(centerLocation) > 2) {
+                            reCenterButton.setVisibility(reCenterButton.VISIBLE);
+                        } else {
+                            reCenterButton.setVisibility(reCenterButton.INVISIBLE);
+                        }
                     }
                 }
-            );
+            });
         }
     };
 
@@ -99,12 +122,11 @@ public class MainScreenMapFragment extends Fragment {
     }
 
     public void updateMapLocation(Location location) {
+
+        System.out.println("Updating map location");
+
         if (!userLocationMapSync) {
             return;
-        }
-
-        if (heatmapOverlay != null) {
-            heatmapOverlay.clearTileCache();
         }
 
         if (heatmapOverlay != null) {
@@ -117,20 +139,40 @@ public class MainScreenMapFragment extends Fragment {
                 map.clear();
                 LatLng showLocation = new LatLng(location.getLatitude(), location.getLongitude());
                 map.addMarker(new MarkerOptions().position(showLocation).title("You are here"));
+                if (heatmapOverlay != null) {
+                    map.addTileOverlay(new com.google.android.gms.maps.model.TileOverlayOptions().tileProvider(heatmapTileProvider));
+                    heatmapOverlay.clearTileCache();
+                }
                 map.animateCamera(CameraUpdateFactory.newLatLngZoom(showLocation, 17));
             }
         }
     }
 
-    public void updateMapLocation(LatLng latlng){
+    public void updateMapLocation(LatLng latlng, String title){
 //        Location l = new Location("");
 //        l.setLatitude(latlng.latitude);
 //        l.setLongitude(latlng.longitude);
 //        updateMapLocation(l);
         if(map!=null){
             map.clear();
-            map.addMarker(new MarkerOptions().position(latlng).title("You are here"));
+            map.addMarker(new MarkerOptions().position(latlng).title(title));
+
+            if (heatmapOverlay != null) {
+                map.addTileOverlay(new com.google.android.gms.maps.model.TileOverlayOptions().tileProvider(heatmapTileProvider));
+                heatmapOverlay.clearTileCache();
+            }
+
             map.animateCamera(CameraUpdateFactory.newLatLngZoom(latlng, 17));
+        }
+    }
+
+    public void reCenterMap() {
+        if (map != null) {
+            Location userLocation = map.getMyLocation();
+            if (userLocation != null) {
+                LatLng userLatLng = new LatLng(userLocation.getLatitude(), userLocation.getLongitude());
+                map.animateCamera(CameraUpdateFactory.newLatLngZoom(userLatLng, 17));
+            }
         }
     }
 
@@ -150,7 +192,11 @@ public class MainScreenMapFragment extends Fragment {
     }
 
     public void setHeatmap(HeatmapTileProvider heatmapTileProvider) {
+        if (heatmapOverlay != null) {
+            heatmapOverlay.remove();
+        }
         System.out.println("Setting heatmap");
+        this.heatmapTileProvider = heatmapTileProvider;
         heatmapOverlay = map.addTileOverlay(new com.google.android.gms.maps.model.TileOverlayOptions().tileProvider(heatmapTileProvider));
         heatmapOverlay.setVisible(true);
         heatmapOverlay.clearTileCache();

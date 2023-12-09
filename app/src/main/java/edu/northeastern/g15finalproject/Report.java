@@ -80,4 +80,11 @@ public class Report {
     public String getFullAddress() {
         return street_address + ", " + city + ", " + state + ", " + zipcode;
     }
+
+    protected float getDistance(double latitude, double longitude) {
+        // Get the distance from the report to the aggregate report
+        float[] results = new float[1];
+        android.location.Location.distanceBetween(this.latitude, this.longitude, latitude, longitude, results);
+        return results[0];
+    }
 }

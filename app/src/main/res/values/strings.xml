@@ -54,4 +54,6 @@
     </string>
     <string name="post_content">Content</string>
     <string name="RTDB_ROOT">https://group15finalproj-default-rtdb.firebaseio.com/</string>
+    <string name="firebase_database_url">https://group15finalproj-default-rtdb.firebaseio.com/</string>
+    <string name="geocoding_base_url">https://maps.googleapis.com/maps/api/geocode/json</string>
 </resources>

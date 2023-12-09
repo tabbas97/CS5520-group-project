@@ -3,6 +3,7 @@ package edu.northeastern.g15finalproject;
 import static edu.northeastern.g15finalproject.Helpers.HeatmapHelper.transformReports;
 import static edu.northeastern.g15finalproject.Helpers.HeatmapHelper.transformReportsToHeatmapTileProvider;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.SearchView;
 import androidx.core.app.ActivityCompat;
@@ -12,6 +13,7 @@ import androidx.room.Room;
 
 import android.Manifest;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.VibrationEffect;
 import android.os.Vibrator;
 import androidx.room.RoomDatabase;
@@ -33,11 +35,14 @@ import android.widget.Toast;
 // Import location services
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationAvailability;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationResult;
 import com.google.android.gms.location.LocationCallback;
 
+import com.google.android.gms.maps.MapFragment;
+import com.google.android.gms.maps.UiSettings;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.Firebase;
@@ -156,6 +161,7 @@ public class MainActivity extends AppCompatActivity {
 
         Fragment mapFragment = new MainScreenMapFragment();
 
+        // Setting listeners
         if (deviceLocation != null) {
 
             // Get the latitude and longitude of the device
@@ -195,8 +201,6 @@ public class MainActivity extends AppCompatActivity {
                         // ...
                         mapLocation = location;
                     }
-
-                    ((MainScreenMapFragment) mapFragment).updateMapLocation(mapLocation);
                 }
             };
         }
@@ -207,24 +211,24 @@ public class MainActivity extends AppCompatActivity {
         bundle.putString("locationLabel", locationLabel);
         mapFragment.setArguments(bundle);
 
-        // How to get the fragment manager from an activity:
         getSupportFragmentManager().beginTransaction()
                 .replace(R.id.map_fragment, mapFragment).commit();
 
+        // Start location updates
         fusedLocationProviderClient.requestLocationUpdates(
                 locationRequest,
                 locationCallback,
                 Looper.getMainLooper()
         );
 
-        // Add listener to the toggle button
-        Button toggleButton = findViewById(R.id.toggle_button);
+        // Add listener to the recenter button
+        FloatingActionButton toggleButton = findViewById(R.id.location_recenter_button);
         toggleButton.setOnClickListener((buttonView) -> {
-            ((MainScreenMapFragment) mapFragment).startLocationTracking();
-            ((MainScreenMapFragment) mapFragment).syncUserViewLastLocation();
+            ((MainScreenMapFragment)mapFragment).reCenterMap();
             buttonView.setVisibility(View.INVISIBLE);
         });
 
+        // Search bar listener
         searchLocation = findViewById(R.id.searchview_bar);
         searchLocation.setOnClickListener(v -> searchLocation.setIconified(false));
         searchLocation.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
@@ -247,7 +251,7 @@ public class MainActivity extends AppCompatActivity {
 //                    newLocation.setLatitude(address.getLatitude());
 //                    newLocation.setLongitude(address.getLongitude());
                         LatLng latlng = new LatLng(address.getLatitude(), address.getLongitude());
-                        ((MainScreenMapFragment) mapFragment).updateMapLocation(latlng);
+                        ((MainScreenMapFragment) mapFragment).updateMapLocation(latlng, address.toString());
                     }
                 }
                 return false;
@@ -259,6 +263,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        // Emergency contact database
         try {
             // Initialize the database
             db = Room.databaseBuilder(getApplicationContext(),
@@ -283,12 +288,13 @@ public class MainActivity extends AppCompatActivity {
                 System.out.println("Emergency contact DAO is null");
             }
 
-//            emergencyContacts = emergencyContactDao.getAll();
+            // Check if emergency contacts is loaded from the room database
             if (emergencyContacts != null) {
                 for (EmergencyContact emergencyContact : emergencyContacts) {
                     System.out.println("Emergency contact: " + emergencyContact.name + ", " + emergencyContact.phoneNumber);
                 }
             } else {
+
                 System.out.println("Emergency contacts is null");
 
                 // Adding test contacts to the database on a background thread
@@ -413,8 +419,9 @@ public class MainActivity extends AppCompatActivity {
 
                 List<Report> allReports = HeatmapHelper.transformReports(allReportsMap);
 
-                // Get the locations of the reports
-                HeatmapTileProvider heatmapTileProvider = transformReportsToHeatmapTileProvider(allReports);
+                // Currently always recompute the weighted lat longs
+                HeatmapTileProvider heatmapTileProvider = transformReportsToHeatmapTileProvider(allReports, null);
+
                 System.out.println("HMT Data" + heatmapTileProvider.getTile(0, 0, 0).data.length);
 
                 System.out.println("Reports ret THREAD : Ready to Update map fragment");
@@ -493,5 +500,31 @@ public class MainActivity extends AppCompatActivity {
 
     public void profileClick(View view) {
         startActivity(new Intent(this, ProfileActivity.class));
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+
+        // Check username in shared preferences
+        SharedPreferences sharedPref = getSharedPreferences("userdata", Context.MODE_PRIVATE);
+        String currentUserName = sharedPref.getString("currentUserName", null);
+        Boolean firstLoginAttempted = sharedPref.getBoolean("firstLoginAttempted", false);
+
+        if (currentUserName == null) {
+            System.out.println("Current user name is null");
+            if (!firstLoginAttempted) {
+                System.out.println("First login attempted");
+                // First time login
+                // Launch the login activity
+                Intent intent = new Intent(this, ProfileActivity.class);
+                intent.putExtra("firstLogin", true);
+                startActivity(intent);
+            } else {
+                // Make a toast to tell the user that many functions are disabled
+                // because they are not logged in
+                Toast.makeText(this, "Please login to use all the features as intended", Toast.LENGTH_SHORT).show();
+            }
+        }
     }
 }

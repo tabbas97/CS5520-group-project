@@ -28,104 +28,190 @@
         app:defaultQueryHint="Search for a place"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
-
+        app:layout_constraintTop_toTopOf="parent"
+        android:elevation="10dp"
+        android:visibility="visible"
+        >
     </androidx.appcompat.widget.SearchView>
 
-    <!--   Add a toggle button that switches on or off map user loc syncing-->
-    <Button
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/toggle_button"
-        android:layout_margin="20dp"
+        android:id="@+id/location_recenter_button"
         android:clickable="true"
         android:focusable="true"
+        app:srcCompat="@drawable/baseline_my_location_24"
         app:backgroundTint="@color/white"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/add_report_button"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.95"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.9" />
+        app:layout_constraintVertical_bias="0.95" />
 
-    <LinearLayout
-        android:layout_width="wrap_content"
+    <FrameLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="5dp"
+        android:layout_marginHorizontal="10dp"
+        android:layout_marginBottom="10dp"
         android:clickable="true"
         android:focusable="true"
         android:visibility="visible"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        android:id="@+id/bottom_buttons_layout"
+        android:id="@+id/bottom_buttons_wrapper_layout"
+        android:background="@color/white"
+        android:elevation="10dp"
         android:orientation="horizontal">
 
-        <Button
-            android:layout_width="80dp"
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/reports_button"
             android:layout_margin="5dp"
+
             android:clickable="true"
             android:focusable="true"
-            android:text="Reports"
-            android:textColor="@color/white"
-            android:textSize="10sp"
-            android:onClick="report"
-            app:backgroundTint="#A5ACB2"
+            android:visibility="visible"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            android:id="@+id/bottom_buttons_layout"
+            android:orientation="horizontal">
 
-            />
+            <Space
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:layout_weight="1" />
 
-        <!-- Add an empty button that will be the spaceholder for a floating action button -->
-        <Button
-            android:layout_width="80dp"
-            android:layout_height="wrap_content"
-            android:layout_margin="5dp"
-            android:clickable="true"
-            android:id="@+id/message_boards_button"
-            android:text="Message Boards"
-            android:textSize="10sp"
-            android:textColor="@color/white"
-            app:backgroundTint="@color/material_dynamic_neutral_variant70"
-            />
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="5dp"
+                android:clickable="true"
+                android:focusable="true"
+                android:orientation="vertical">
 
-        <Button
-            android:layout_width="80dp"
-            android:layout_height="wrap_content"
-            android:layout_margin="5dp"
-            android:clickable="true"
-            android:visibility="invisible"
-            />
+                <Button
+                    android:layout_width="48dp"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/reports_button"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:textColor="@color/white"
+                    android:textSize="10sp"
+                    android:onClick="report"
+                    android:background="@drawable/baseline_report_24"
+                    android:layout_weight="1"
+                    />
 
-        <Button
-            android:id="@+id/profile_settings_button"
-            android:layout_width="80dp"
-            android:layout_height="wrap_content"
-            android:layout_margin="5dp"
-            android:clickable="true"
-            android:focusable="true"
-            android:onClick="profileClick"
-            android:text="Profile"
-            android:textColor="@color/white"
-            android:textSize="10sp"
-            app:backgroundTint="#A5ACB2" />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Reports"
+                    android:textColor="@color/black"
+                    android:textSize="10sp"
+                    android:layout_weight="1"
+                    android:layout_gravity="center"
+                    />
 
-        <!--  Settings button -->
-        <Button
-            android:layout_width="80dp"
-            android:layout_height="wrap_content"
-            android:id="@+id/settings_button"
-            android:layout_margin="5dp"
-            android:clickable="true"
-            android:focusable="true"
-            android:text="Settings"
-            android:textColor="@color/white"
-            android:textSize="10sp"
-            app:backgroundTint="#A5ACB2"
-            />
+            </LinearLayout>
+
+            <Space
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:layout_weight="1" />
+            <Space
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:layout_weight="1" />
+
+            <!-- Add an empty button that will be the spaceholder for a floating action button -->
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="5dp"
+                android:clickable="true"
+                android:focusable="true"
+                android:orientation="vertical">
+
+                <Button
+                    android:layout_width="48dp"
+                    android:layout_height="wrap_content"
+                    android:clickable="true"
+                    android:id="@+id/message_boards_button"
+                    android:textSize="10sp"
+                    android:background="@drawable/baseline_message_board_24"
+                    android:textColor="@color/white"
+                    android:layout_weight="1"
+                    />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Message \nBoards"
+                    android:textColor="@color/black"
+                    android:textAlignment="center"
+                    android:textSize="10sp"
+                    android:layout_weight="1"
+                    android:layout_gravity="center"
+                    />
+
+            </LinearLayout>
+
+            <Space
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:layout_weight="1" />
+            <Space
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:layout_weight="1" />
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="5dp"
+                android:clickable="true"
+                android:focusable="true"
+                android:orientation="vertical">
+
+                <Button
+                    android:id="@+id/profile_settings_button"
+                    android:layout_width="48dp"
+                    android:layout_height="wrap_content"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:onClick="profileClick"
+                    android:background="@drawable/baseline_person_outline_24"
+                    android:textColor="@color/white"
+                    android:textSize="10sp"
+                    android:layout_weight="1"
+                    />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Profile"
+                    android:textColor="@color/black"
+                    android:textAlignment="center"
+                    android:textSize="10sp"
+                    android:layout_weight="1"
+                    android:layout_gravity="center"
+                    />
+
+            </LinearLayout>
+
+
+            <Space
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:layout_weight="1" />
 
     </LinearLayout>
 
+    </FrameLayout>
     <!-- Add a floating action button that says SOS in a red circle -->
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/sos_button"
@@ -133,29 +219,30 @@
         android:layout_height="wrap_content"
         android:clickable="true"
         android:focusable="true"
+        android:layout_marginVertical="20dp"
         app:srcCompat="@drawable/baseline_sos_24"
         app:backgroundTint="#FF5252"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/bottom_buttons_wrapper_layout"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.9" />
+        app:layout_constraintVertical_bias="0.95" />
 
     <!--  Add Report Button - above the location recenter button -->
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/report_button"
-        android:layout_margin="20dp"
+        android:id="@+id/add_report_button"
         android:clickable="true"
+        android:layout_marginVertical="20dp"
         android:focusable="true"
+        android:backgroundTint="@color/white"
         app:srcCompat="@drawable/baseline_report_24"
-        app:layout_constraintBottom_toTopOf="@+id/toggle_button"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.95"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.95" />
+        app:layout_constraintBottom_toTopOf="@+id/bottom_buttons_wrapper_layout"
+        app:layout_constraintVertical_bias="0.9" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

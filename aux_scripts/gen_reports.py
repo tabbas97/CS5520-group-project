@@ -121,13 +121,13 @@ class GoogleAddress:
 
 from geopy.extra.rate_limiter import RateLimiter
 
-for i in tqdm(range(2000)):
+for i in tqdm(range(200)):
 
     # if i == 5:
     #     break
 
-    randomLat = 42.33251869702252 + random.uniform(-0.1, 0.1)
-    randomLong = -71.10496781543584 + random.uniform(-0.1, 0.1)
+    randomLat = 42.33251869702252 + random.uniform(-0.01, 0.01)
+    randomLong = -71.10496781543584 + random.uniform(-0.01, 0.01)
 
     # Get the address of the report
     locator = geopy.GoogleV3(api_key=geoCodeKey)
