@@ -10,6 +10,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -64,6 +65,12 @@ public class ProfileActivity extends AppCompatActivity {
 
     public void onLoginClick(View view) {
         String username = username_tv.getText().toString();
+
+        if(username.isEmpty()){
+            Toast.makeText(this, "Please enter a username",
+                    Toast.LENGTH_SHORT).show();
+            return;
+        }
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         DocumentReference docRef = db.collection("users").document(username);
 
@@ -117,7 +124,8 @@ public class ProfileActivity extends AppCompatActivity {
     }
 
     public void onRegisterClick(View view) {
-        startActivity(new Intent(this, RegisterActivity.class));
+        Intent intent = new Intent(this, RegisterActivity.class);
+        startActivity(intent);
     }
 
     public void loadProfile(){

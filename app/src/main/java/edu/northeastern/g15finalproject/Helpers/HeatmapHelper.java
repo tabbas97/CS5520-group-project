@@ -197,8 +197,9 @@ public class HeatmapHelper {
         try {
             heatmapTileProvider = new HeatmapTileProvider.Builder()
                     .weightedData(weightedLatLngs)
-                    .opacity(1)
-                    .maxIntensity(3)
+                    .opacity(0.6)
+                    .radius(50)
+                    .maxIntensity(1)
                     .build();
             System.out.println("Created heatmap tile provider");
         } catch (Exception e) {

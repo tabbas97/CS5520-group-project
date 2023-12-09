@@ -246,4 +246,24 @@
         app:layout_constraintBottom_toTopOf="@+id/bottom_buttons_wrapper_layout"
         app:layout_constraintVertical_bias="0.9" />
 
+    <!-- Button to launch the dialog to show the benefits of registering/logging in  -->
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/why_login"
+        android:clickable="true"
+        android:focusable="true"
+        android:text="Why Login?"
+        android:textColor="@color/white"
+        android:layout_marginTop="10dp"
+        android:textSize="10sp"
+        android:background="@drawable/rounded_edit_text"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.05"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/searchview_bar"
+        android:visibility="invisible"
+        />
+
+
 </androidx.constraintlayout.widget.ConstraintLayout>

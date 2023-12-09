@@ -42,7 +42,7 @@ public class RegisterActivity extends AppCompatActivity {
             if (task.isSuccessful()) {
                 DocumentSnapshot document = task.getResult();
                 if (document.exists()) {
-                    Log.i("FUUUCK", "USER ALREADY EXISTS");
+                    Log.i("BAD", "USER ALREADY EXISTS");
                 } else {
                     User user_reg = new User();
                     user_reg.setUserName(username);
@@ -56,7 +56,7 @@ public class RegisterActivity extends AppCompatActivity {
                     startActivity(new Intent(this, ProfileActivity.class));
                 }
             } else {
-                Log.i("FUUUCK", "get failed with ", task.getException());
+                Log.i("BAD", "get failed with ", task.getException());
             }
         });
     }

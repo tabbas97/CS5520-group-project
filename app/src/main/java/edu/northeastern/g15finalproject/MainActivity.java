@@ -464,6 +464,21 @@ public class MainActivity extends AppCompatActivity {
 
         thread.start();
 
+        // Set Why Login button listener to a dialog
+        Button why_login_button = findViewById(R.id.why_login);
+        why_login_button.setOnClickListener(view -> {
+            // Create a dialog to explain why login is needed
+            android.app.AlertDialog.Builder builder = new android.app.AlertDialog.Builder(this);
+            builder.setTitle("Why Login?");
+            builder.setMessage("Login is needed to use all the features of the app. \n" +
+                    "Message boards, Profile Section, and the ability to report incidents are disabled. \n" +
+                    "Login is also needed to use the SMS to emergency contacts feature of the SOS feature in the app.");
+            builder.setPositiveButton("OK", (dialog, which) -> {
+                // Do nothing
+            });
+            builder.show();
+        });
+
     }
 
     private void stopLocationUpdates() {
@@ -543,7 +558,11 @@ public class MainActivity extends AppCompatActivity {
                 // because they are not logged in
                 Toast.makeText(this, "Please login to use all the features as intended", Toast.LENGTH_SHORT).show();
             }
+            Button why_login_button = findViewById(R.id.why_login);
+            why_login_button.setVisibility(View.VISIBLE);
         } else {
+            Button why_login_button = findViewById(R.id.why_login);
+            why_login_button.setVisibility(View.GONE);
             System.out.println("Current user name is not null");
             // User is logged in
             // Make a toast to tell the user that they are logged in
