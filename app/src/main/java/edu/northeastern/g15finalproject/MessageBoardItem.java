@@ -31,8 +31,24 @@ public class MessageBoardItem {
         return postBody.substring(0, Math.min(postBody.length(), 50)) + "...";
     }
 
-    public String getPostTime() {
-        return postTime;
+    public long getPostTime() {
+
+        if (postTime == null) {
+            System.out.println("postTime is null");
+            System.out.println(this.toString());
+        }
+
+        try {
+            return Long.parseLong(postTime);
+        } catch (NumberFormatException e) {
+            System.out.println("postTime is not a number");
+            System.out.println(e.getMessage());
+        }
+
+        System.out.println("postTime is not null");
+        System.out.println(this.toString());
+        System.out.flush();
+        return Long.getLong(postTime);
     }
 
     public String getPostNumComments() {
@@ -49,5 +65,18 @@ public class MessageBoardItem {
 
     public String getPostID() {
         return postID;
+    }
+
+    @Override
+    public String toString() {
+        return "MessageBoardItem{" +
+                "postTitle='" + postTitle + '\'' +
+                ", postBody='" + postBody + '\'' +
+                ", postTime='" + postTime + '\'' +
+                ", postNumComments='" + postNumComments + '\'' +
+                ", postNumPlusOne='" + postNumPlusOne + '\'' +
+                ", postUser='" + postUser + '\'' +
+                ", postID='" + postID + '\'' +
+                '}';
     }
 }

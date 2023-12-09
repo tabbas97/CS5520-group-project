@@ -1,5 +1,9 @@
 package edu.northeastern.g15finalproject.DataClasses;
 
+import android.location.Location;
+
+import org.json.JSONObject;
+
 // FORMAT ON FIREBASE
 /*
 {
@@ -27,8 +31,9 @@ public class Post {
     public final String attached_report;
     public final long time;
     public final boolean testing;
+    public final Location location;
 
-    public Post(String username, String title, String body, String postId, String attached_report, long time, boolean testing) {
+    public Post(String username, String title, String body, String postId, String attached_report, long time, boolean testing, Location location) {
         this.username = username;
         this.title = title;
         this.body = body;
@@ -36,9 +41,26 @@ public class Post {
         this.attached_report = attached_report;
         this.time = time;
         this.testing = testing;
+        this.location = location;
     }
 
-    static Post fromJson(String username, String title, String body, String postId, String attached_report, long time, boolean testing) {
-        return new Post(username, title, body, postId, attached_report, time, testing);
+    static Post fromJson(String username, String title, String body, String postId, String attached_report, long time, boolean testing, Location location) {
+        return new Post(username, title, body, postId, attached_report, time, testing, location);
+    }
+
+    public static JSONObject toJson(Post post) {
+        JSONObject json = new JSONObject();
+        try {
+            json.put("username", post.username);
+            json.put("title", post.title);
+            json.put("body", post.body);
+            json.put("attached_report", post.attached_report);
+            json.put("time", post.time);
+            json.put("testing", post.testing);
+            json.put("location", post.location);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return json;
     }
 }

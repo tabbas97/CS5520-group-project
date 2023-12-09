@@ -6,17 +6,22 @@
     android:layout_height="match_parent"
     tools:context=".MessageBoardsActivity">
 
-    <TextView
-        android:id="@+id/textView"
-        android:layout_width="wrap_content"
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolbar_MessageBoards"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Message Boards"
+        android:background="@color/toolbar_purple"
+        app:title="Message Board"
+        android:gravity="center"
+        android:textAlignment="center"
+        android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
+        app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
+        app:titleTextColor="@color/white"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
-        android:layout_margin="10dp"
-        android:textSize="30sp"
-        android:textColor="@color/activity_title_color"
+        app:layout_constraintRight_toRightOf="parent"
         />
+
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/message_boards_recycler_layout"
@@ -25,13 +30,15 @@
         android:layout_margin="10dp"
         app:layout_constraintBottom_toTopOf="@id/range_slider"
         app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView">
+        app:layout_constraintTop_toBottomOf="@+id/toolbar_MessageBoards">
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/message_boards_recycler_view"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="10dp"
+            android:divider="#B19CD9"
+            android:dividerHeight="2dp"
             android:layout_marginBottom="10dp"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
@@ -73,12 +80,10 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/add_post_fab"
-        android:layout_margin="10dp"
+        android:layout_margin="30dp"
         android:src="@drawable/ic_add_black_24"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         />
-
-
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -14,6 +14,7 @@ public class User implements Parcelable{
     String password;
     String fullName;
     String dateOfBirth;
+    String phoneNumber;
 
     List<String> friendsIds;
 
@@ -29,6 +30,7 @@ public class User implements Parcelable{
         password = in.readString();
         fullName = in.readString();
         dateOfBirth = in.readString();
+        phoneNumber = in.readString();
         friendsIds = in.createStringArrayList();
         emergencyContacts = in.createStringArrayList();
     }
@@ -93,6 +95,14 @@ public class User implements Parcelable{
         this.emergencyContacts = emergencyContacts;
     }
 
+    public String getPhoneNumber() {
+        return phoneNumber;
+    }
+
+    public void setPhoneNumber(String phoneNumber) {
+        this.phoneNumber = phoneNumber;
+    }
+
     @Override
     public int describeContents() {
         return 0;
@@ -104,6 +114,7 @@ public class User implements Parcelable{
         dest.writeString(password);
         dest.writeString(fullName);
         dest.writeString(dateOfBirth);
+        dest.writeString(phoneNumber);
         dest.writeStringList(friendsIds);
         dest.writeStringList(emergencyContacts);
     }

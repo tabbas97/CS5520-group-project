@@ -8,9 +8,9 @@
 
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
-    <uses-permission android:name="android.permission.CALL_PHONE"  />
+    <uses-permission android:name="android.permission.CALL_PHONE" />
     <uses-permission android:name="android.permission.SEND_SMS" />
-    <uses-permission android:name="android.permission.INTERNET"  />
+    <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.VIBRATE" />
 
     <application
@@ -24,13 +24,16 @@
         android:theme="@style/Theme.G15FinalProject"
         tools:targetApi="31">
         <activity
+            android:name=".EditPostActivity"
+            android:exported="false" />
+        <activity
             android:name=".AddPostActivity"
             android:exported="false" />
         <activity
             android:name=".MessageBoardCommentItem"
             android:exported="false" />
         <activity
-            android:name=".MessageBoardOwnPostActivity"
+            android:name=".MessageBoardPostViewActivity"
             android:exported="false" />
         <activity
             android:name=".MessageBoardsActivity"

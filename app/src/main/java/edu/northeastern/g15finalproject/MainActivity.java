@@ -49,6 +49,7 @@ import com.google.firebase.Firebase;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.gson.Gson;
 import com.google.maps.android.heatmaps.HeatmapTileProvider;
 
 import java.util.ArrayList;
@@ -263,59 +264,46 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        // Emergency contact database
-        try {
-            // Initialize the database
-            db = Room.databaseBuilder(getApplicationContext(),
-                    EmergencyContactDatabase.class, "emergency-contacts").build();
+        // Emergency contacts load from shared preferences
+        SharedPreferences sharedPref = getSharedPreferences("userdata", Context.MODE_PRIVATE);
+        String emergencyContactsString = sharedPref.getString("emergencyContacts", null);
 
-            // Initialize the emergency contact DAO
-            emergencyContactDao = db.EmergencyContactDao();
-
-            if (emergencyContactDao != null) {
-                // Get all the emergency contacts on a background thread
-                Thread thread = new Thread(() -> {
-                    emergencyContacts = emergencyContactDao.getAll();
-                    if (emergencyContacts != null) {
-                        for (EmergencyContact emergencyContact : emergencyContacts) {
-                            System.out.println("Emergency contact: " + emergencyContact.name + ", " + emergencyContact.phoneNumber);
-                        }
-                    } else {
-                        System.out.println("Emergency contacts is null");
-                    }
-                });
-            } else {
-                System.out.println("Emergency contact DAO is null");
-            }
-
-            // Check if emergency contacts is loaded from the room database
-            if (emergencyContacts != null) {
-                for (EmergencyContact emergencyContact : emergencyContacts) {
-                    System.out.println("Emergency contact: " + emergencyContact.name + ", " + emergencyContact.phoneNumber);
-                }
-            } else {
-
-                System.out.println("Emergency contacts is null");
-
-                // Adding test contacts to the database on a background thread
-                Thread thread = new Thread(() -> {
-                    // Delet all the emergency contacts
-                    List <EmergencyContact> emergencyContactOld = emergencyContactDao.getAll();
-                    for (EmergencyContact emergencyContact : emergencyContactOld) {
-                        emergencyContactDao.delete(emergencyContact);
-                    }
-
-                    emergencyContactDao.insertAll(
-                            new EmergencyContact(1, "t1", "18573130768"),
-                            new EmergencyContact(2, "t2", "16463394762"),
-                            new EmergencyContact(3, "t3", "16073792745")
-                    );
-                });
-                thread.start();
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        // // Emergency contact database
+        // try {
+        //     // Initialize the database
+        //     db = Room.databaseBuilder(getApplicationContext(),
+        //             EmergencyContactDatabase.class, "emergency-contacts").build();
+        //
+        //     // Initialize the emergency contact DAO
+        //     emergencyContactDao = db.EmergencyContactDao();
+        //
+        //     if (emergencyContactDao != null) {
+        //         // Get all the emergency contacts on a background thread
+        //         Thread thread = new Thread(() -> {
+        //             emergencyContacts = emergencyContactDao.getAll();
+        //             if (emergencyContacts != null) {
+        //                 for (EmergencyContact emergencyContact : emergencyContacts) {
+        //                     System.out.println("Emergency contact: " + emergencyContact.name + ", " + emergencyContact.phoneNumber);
+        //                 }
+        //             } else {
+        //                 System.out.println("Emergency contacts is null");
+        //             }
+        //         });
+        //     } else {
+        //         System.out.println("Emergency contact DAO is null");
+        //     }
+        //
+        //     // Check if emergency contacts is loaded from the room database
+        //     if (emergencyContacts != null) {
+        //         for (EmergencyContact emergencyContact : emergencyContacts) {
+        //             System.out.println("Emergency contact: " + emergencyContact.name + ", " + emergencyContact.phoneNumber);
+        //         }
+        //     } else {
+        //         System.out.println("Emergency contacts is null");
+        //     }
+        // } catch (Exception e) {
+        //     e.printStackTrace();
+        // }
 
         // SOS Button listener
         FloatingActionButton sosButton = findViewById(R.id.sos_button);
@@ -348,8 +336,28 @@ public class MainActivity extends AppCompatActivity {
                 Thread smsThread = new Thread(() -> {
                     // Send SMSes to the emergency contacts
 
-                    List<EmergencyContact> emergencyContacts = emergencyContactDao.getAll();
-                    System.out.println("Emergency contacts: " + emergencyContacts);
+                    Gson gson = new Gson();
+
+                    Map<String, String> emContactMap = gson.fromJson(emergencyContactsString, Map.class);
+
+                    if (emergencyContacts == null) {
+                        emergencyContacts = new ArrayList<>();
+                    }
+
+                    if (emContactMap == null) {
+                        emContactMap = new HashMap<>();
+                    }
+
+                    for (Map.Entry<String, String> entry : emContactMap.entrySet()) {
+                        emergencyContacts.add(
+                                new EmergencyContact(
+                                        entry.getKey().hashCode(),
+                                        entry.getKey(),
+                                        entry.getValue()
+                                )
+                        );
+                    }
+
                     for (EmergencyContact emergencyContact : emergencyContacts) {
                         System.out.println("Sending SMS to: " + emergencyContact.phoneNumber);
                         // Send SMS to the emergency contact
@@ -390,7 +398,17 @@ public class MainActivity extends AppCompatActivity {
         Button messageBoardsButton = findViewById(R.id.message_boards_button);
         messageBoardsButton.setOnClickListener(view -> {
             System.out.println("Message Boards Button clicked");
+
+            SharedPreferences sharedPreferences = getSharedPreferences("userdata", Context.MODE_PRIVATE);
+            String currentUserName = sharedPreferences.getString("currentUserName", null);
+
+            if (currentUserName == null) {
+                Toast.makeText(this, "Please login to view message boards", Toast.LENGTH_SHORT).show();
+                return;
+            }
+
             Intent intent = new Intent(this, MessageBoardsActivity.class);
+            intent.putExtra("location", mapLocation);
             startActivity(intent);
         });
 
@@ -525,6 +543,11 @@ public class MainActivity extends AppCompatActivity {
                 // because they are not logged in
                 Toast.makeText(this, "Please login to use all the features as intended", Toast.LENGTH_SHORT).show();
             }
+        } else {
+            System.out.println("Current user name is not null");
+            // User is logged in
+            // Make a toast to tell the user that they are logged in
+            Toast.makeText(this, "Logged in as " + currentUserName, Toast.LENGTH_SHORT).show();
         }
     }
 }

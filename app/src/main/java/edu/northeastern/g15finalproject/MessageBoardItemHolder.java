@@ -10,9 +10,11 @@ public class MessageBoardItemHolder extends RecyclerView.ViewHolder {
 
     public TextView postTitle;
     public TextView postHeadline;
-    public TextClock postTime;
+    public TextView postTime;
     public TextView postNumComments;
     public TextView postNumPlusOne;
+
+    public boolean isSelect = false;
 
     public MessageBoardItemHolder(@NonNull android.view.View itemView) {
         super(itemView);

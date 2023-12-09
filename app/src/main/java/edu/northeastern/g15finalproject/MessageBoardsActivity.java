@@ -3,8 +3,11 @@ package edu.northeastern.g15finalproject;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.Intent;
+import android.location.Location;
 import android.os.Bundle;
 import android.widget.ProgressBar;
 
@@ -17,8 +20,6 @@ import com.google.firebase.database.FirebaseDatabase;
 import java.util.ArrayList;
 import java.util.List;
 
-import edu.northeastern.g15finalproject.DataClasses.Post;
-
 public class MessageBoardsActivity extends AppCompatActivity {
 
     static RecyclerView postRecyclerView;
@@ -30,10 +31,24 @@ public class MessageBoardsActivity extends AppCompatActivity {
     private FirebaseDatabase rootNode;
     private DatabaseReference postsRef;
 
+    private Location location = null;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_message_boards);
+
+        // get intent
+        android.content.Intent intent = getIntent();
+        // check if intent has location
+        if (intent.hasExtra("location")) {
+            // get location from intent
+            location = intent.getParcelableExtra("location");
+        } else {
+            // set location to null
+            location = null;
+            System.out.println("Location is null. Intent does not have location.");
+        }
 
         progressBar = findViewById(R.id.progressBarMessageBoards);
 
@@ -86,6 +101,12 @@ public class MessageBoardsActivity extends AppCompatActivity {
                         String body = post.child("body").getValue().toString();
                         System.out.println("Time : " + post.child("time").getValue().toString());
                         Long timeStamp = (Long)post.child("time").getValue();
+
+                        if (timeStamp == null) {
+                            System.out.println("Time stamp is null");
+                            System.out.println("POST KEY : " + post.getKey());
+                        }
+
                         String username = post.child("username").getValue().toString();
 
                         // Get number of comments from iterable
@@ -123,7 +144,7 @@ public class MessageBoardsActivity extends AppCompatActivity {
                             progressBar.setVisibility(android.view.View.INVISIBLE);
                             postRecyclerView = findViewById(R.id.message_boards_recycler_view);
                             postRecyclerView.setLayoutManager(new androidx.recyclerview.widget.LinearLayoutManager(MessageBoardsActivity.this));
-                            postRecyclerView.setAdapter(new PostAdapter(postsList, MessageBoardsActivity.this));
+                            postRecyclerView.setAdapter(new MessageBoardItemAdapter(postsList, MessageBoardsActivity.this));
                         }
                     });
                 });
@@ -135,7 +156,10 @@ public class MessageBoardsActivity extends AppCompatActivity {
         // Set of sample posts
         postRecyclerView = findViewById(R.id.message_boards_recycler_view);
         postRecyclerView.setLayoutManager(new androidx.recyclerview.widget.LinearLayoutManager(this));
-        postRecyclerView.setAdapter(new PostAdapter(posts, this));
+        postRecyclerView.setAdapter(new MessageBoardItemAdapter(posts, this));
+        postRecyclerView.addItemDecoration(
+                new DividerItemDecoration(this, DividerItemDecoration.VERTICAL)
+        );
 
         // Add an onChildAddedListener to the postsRef
         postsRef.addChildEventListener(new com.google.firebase.database.ChildEventListener() {
@@ -167,6 +191,7 @@ public class MessageBoardsActivity extends AppCompatActivity {
                       "username": "u1"
                     }
                  */
+                System.out.println("SNAPSHOT VAL: " + snapshot.getValue().toString());
                 String title = snapshot.child("title").getValue().toString();
                 String body = snapshot.child("body").getValue().toString();
                 String timeStamp = snapshot.child("time").getValue().toString();
@@ -294,7 +319,11 @@ public class MessageBoardsActivity extends AppCompatActivity {
         add_post_fab = findViewById(R.id.add_post_fab);
         add_post_fab.setOnClickListener(v -> {
             // Open the AddPostActivity
-            startActivity(new android.content.Intent(MessageBoardsActivity.this, AddPostActivity.class));
+            Intent intent1 = new Intent(MessageBoardsActivity.this, AddPostActivity.class);
+            if (location != null) {
+                intent1.putExtra("location", location);
+            }
+            startActivity(intent1);
         });
     }
 

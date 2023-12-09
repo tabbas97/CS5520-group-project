@@ -15,7 +15,8 @@
         android:layout_height="match_parent"
         android:layout_margin="5dp"
         tools:layout_editor_absoluteX="-7dp"
-        tools:layout_editor_absoluteY="90dp" />
+        tools:layout_editor_absoluteY="90dp"
+        tools:layout="@layout/fragment_main_screen_map" />
 
     <androidx.appcompat.widget.SearchView
         android:id="@+id/searchview_bar"

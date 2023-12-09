@@ -59,7 +59,7 @@
             app:layout_constraintLeft_toLeftOf="parent"
             >
 
-            <TextClock
+            <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:id="@+id/post_time"
