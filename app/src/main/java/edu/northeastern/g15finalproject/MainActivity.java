@@ -277,6 +277,7 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public boolean onQueryTextChange(String newText) {
+                // Do nothing. We are not doing autocomplete as of now.
                 return false;
             }
         });
@@ -284,43 +285,6 @@ public class MainActivity extends AppCompatActivity {
         // Emergency contacts load from shared preferences
         SharedPreferences sharedPref = getSharedPreferences("userdata", Context.MODE_PRIVATE);
         String emergencyContactsString = sharedPref.getString("emergencyContacts", null);
-
-        // // Emergency contact database
-        // try {
-        //     // Initialize the database
-        //     db = Room.databaseBuilder(getApplicationContext(),
-        //             EmergencyContactDatabase.class, "emergency-contacts").build();
-        //
-        //     // Initialize the emergency contact DAO
-        //     emergencyContactDao = db.EmergencyContactDao();
-        //
-        //     if (emergencyContactDao != null) {
-        //         // Get all the emergency contacts on a background thread
-        //         Thread thread = new Thread(() -> {
-        //             emergencyContacts = emergencyContactDao.getAll();
-        //             if (emergencyContacts != null) {
-        //                 for (EmergencyContact emergencyContact : emergencyContacts) {
-        //                     System.out.println("Emergency contact: " + emergencyContact.name + ", " + emergencyContact.phoneNumber);
-        //                 }
-        //             } else {
-        //                 System.out.println("Emergency contacts is null");
-        //             }
-        //         });
-        //     } else {
-        //         System.out.println("Emergency contact DAO is null");
-        //     }
-        //
-        //     // Check if emergency contacts is loaded from the room database
-        //     if (emergencyContacts != null) {
-        //         for (EmergencyContact emergencyContact : emergencyContacts) {
-        //             System.out.println("Emergency contact: " + emergencyContact.name + ", " + emergencyContact.phoneNumber);
-        //         }
-        //     } else {
-        //         System.out.println("Emergency contacts is null");
-        //     }
-        // } catch (Exception e) {
-        //     e.printStackTrace();
-        // }
 
         // SOS Button listener
         FloatingActionButton sosButton = findViewById(R.id.sos_button);
