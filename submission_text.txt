@@ -7,7 +7,11 @@ Team Members :
 		- ibrahimbathusha.t@northeastern.edu
 		- tabbas97
 		- Contributions: 
-			-
+			- Main Screen (layout and logic)
+			- Message Board (layout and logic)
+			- SOS Functionality
+			- Heatmap generation
+				- Scripted data generation and UI
 	2. Upmanyu Shrivastava
 		- shrivastava.u@northeastern.edu
 		- ushrivas9
@@ -25,6 +29,9 @@ Link to Video : TODO
 Test Information:
 
 1. Registration can be done with any name/user you prefer
-2. Username with activity: xxxxxxx. Password validation disabled to make testing easier.
-3. Upon first entry, you will be prompted to Login/Register. You may choose to proceed without logging in. However many functionalities would be disabled with an information.
+2. Username with prior activity: testUser4. Password validation disabled to make testing easier. Password on server is registered as "password" for testUser4
+
+Basic App Start Flow
+3. Upon first entry, you will be prompted to Login/Register. You may choose to proceed as guest without logging in. 
+	However many functionalities would be disabled with an informational toast.
 4. Once logged in, we believe the interface is self-explanatory

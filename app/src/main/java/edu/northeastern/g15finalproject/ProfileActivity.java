@@ -68,28 +68,30 @@ public class ProfileActivity extends AppCompatActivity {
             editor.putBoolean("firstLoginAttempted", true);
         }
 
-        if(currentUserName == null){
-            guest_btn.setVisibility(View.VISIBLE);
-        }
-        else{
-            guest_btn.setVisibility(View.INVISIBLE);
-        }
-
-        guest_btn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                // Insert firstLoginAttempted into shared preferences
-                SharedPreferences sharedPref = getSharedPreferences("userdata", Context.MODE_PRIVATE);
-                SharedPreferences.Editor editor = sharedPref.edit();
-                editor.putBoolean("firstLoginAttempted", true);
-                editor.commit();
-
-                // Return to main activity
-                Intent intent = new Intent(ProfileActivity.this, MainActivity.class);
-                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                startActivity(intent);
+        if (guest_btn != null) {
+            
+            if(currentUserName == null){
+                guest_btn.setVisibility(View.VISIBLE);
             }
-        });
+            else{
+                guest_btn.setVisibility(View.INVISIBLE);
+            }
+            guest_btn.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    // Insert firstLoginAttempted into shared preferences
+                    SharedPreferences sharedPref = getSharedPreferences("userdata", Context.MODE_PRIVATE);
+                    SharedPreferences.Editor editor = sharedPref.edit();
+                    editor.putBoolean("firstLoginAttempted", true);
+                    editor.commit();
+
+                    // Return to main activity
+                    Intent intent = new Intent(ProfileActivity.this, MainActivity.class);
+                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                    startActivity(intent);
+                }
+            });
+        }
     }
 
     public void onLoginClick(View view) {

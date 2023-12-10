@@ -195,6 +195,11 @@ public class MainScreenMapFragment extends Fragment {
         if (heatmapOverlay != null) {
             heatmapOverlay.remove();
         }
+
+        if (map == null) {
+            System.out.println("Map is null");
+            return;
+        }
         System.out.println("Setting heatmap");
         this.heatmapTileProvider = heatmapTileProvider;
         heatmapOverlay = map.addTileOverlay(new com.google.android.gms.maps.model.TileOverlayOptions().tileProvider(heatmapTileProvider));
