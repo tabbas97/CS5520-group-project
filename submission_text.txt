@@ -15,9 +15,10 @@ Team Members :
 			- TODO
 	3. Kaiqi Zhang
 		- zhang.kaiq@northeastern.edu
-		- TODO
+		- kaiqiz8
 		- Contributions:
-			- TODO
+			- add a new report feature (layout and logic)
+			- get nearby reports feature (layout and logic)
 
 Link to Video : TODO
 
