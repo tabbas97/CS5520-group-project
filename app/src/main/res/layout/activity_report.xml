@@ -26,15 +26,15 @@
         android:layout_width="128dp"
         android:layout_height="48dp"
         android:background="#EABFFF"
+        android:hint="e.g. 02115"
         android:textSize="16sp"
         android:textStyle="bold"
-        android:hint="e.g. 02115"
         app:layout_constraintBottom_toTopOf="@+id/report_detail_input"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.433"
+        app:layout_constraintHorizontal_bias="0.407"
         app:layout_constraintStart_toEndOf="@+id/state_input"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.669" />
+        app:layout_constraintVertical_bias="0.595" />
 
     <TextView
         android:id="@+id/zipcode"
@@ -44,7 +44,22 @@
         android:textStyle="bold"
         app:layout_constraintBottom_toTopOf="@+id/zipcode_input"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.568"
+        app:layout_constraintHorizontal_bias="0.555"
+        app:layout_constraintStart_toStartOf="@+id/new_report"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="1.0" />
+
+    <EditText
+        android:id="@+id/type_input"
+        android:layout_width="302dp"
+        android:layout_height="48dp"
+        android:background="#EABFFF"
+        android:hint="e.g. People Loitering"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toTopOf="@+id/report_detail"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="@+id/new_report"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="1.0" />
@@ -54,45 +69,32 @@
         android:layout_width="128dp"
         android:layout_height="48dp"
         android:background="#EABFFF"
+        android:hint="e.g. MA"
         android:textSize="16sp"
         android:textStyle="bold"
-        android:hint="e.g. MA"
         app:layout_constraintBottom_toTopOf="@+id/report_detail"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="@+id/new_report"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.71" />
+        app:layout_constraintVertical_bias="0.629" />
 
-    <EditText
-        android:id="@+id/time_input"
+    <TextView
+        android:id="@+id/date_input"
         android:layout_width="128dp"
         android:layout_height="48dp"
         android:background="#EABFFF"
-        android:textSize="16sp"
+        android:gravity="center"
+        android:hint="e.g. 2023-10-29"
+        android:textSize="16dp"
         android:textStyle="bold"
-        android:hint="2023-10-29T11:46:05.111Z"
+        android:visibility="visible"
         app:layout_constraintBottom_toTopOf="@+id/report_detail"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.012"
+        app:layout_constraintHorizontal_bias="0.004"
         app:layout_constraintStart_toStartOf="@+id/new_report"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.936" />
-
-    <EditText
-        android:id="@+id/type_input"
-        android:layout_width="128dp"
-        android:layout_height="48dp"
-        android:background="#EABFFF"
-        android:textSize="16sp"
-        android:textStyle="bold"
-        android:hint="e.g. People Loitering"
-        app:layout_constraintBottom_toTopOf="@+id/report_detail"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.743"
-        app:layout_constraintStart_toStartOf="@+id/new_report"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.933" />
+        app:layout_constraintVertical_bias="0.811" />
 
     <TextView
         android:id="@+id/city"
@@ -102,7 +104,7 @@
         android:textStyle="bold"
         app:layout_constraintBottom_toTopOf="@+id/city_input"
         app:layout_constraintEnd_toEndOf="@+id/new_report"
-        app:layout_constraintHorizontal_bias="0.036"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="@+id/new_report"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="1.0" />
@@ -121,7 +123,7 @@
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="@+id/new_report"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.716" />
+        app:layout_constraintVertical_bias="1.0" />
 
     <EditText
         android:id="@+id/report_detail_input"
@@ -134,11 +136,25 @@
         android:textStyle="bold"
         app:layout_constraintBottom_toTopOf="@+id/submit"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.412"
+        app:layout_constraintHorizontal_bias="0.385"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.956"
+        app:layout_constraintVertical_bias="1.0"
         tools:ignore="MissingConstraints" />
+
+    <!--    <TextView-->
+<!--        android:id="@+id/address"-->
+<!--        android:layout_width="wrap_content"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:text="Address"-->
+<!--        android:textSize="16sp"-->
+<!--        android:textStyle="bold"-->
+<!--        app:layout_constraintBottom_toTopOf="@+id/street"-->
+<!--        app:layout_constraintEnd_toEndOf="@+id/new_report"-->
+<!--        app:layout_constraintHorizontal_bias="0.021"-->
+<!--        app:layout_constraintStart_toStartOf="@+id/new_report"-->
+<!--        app:layout_constraintTop_toTopOf="parent"-->
+<!--        app:layout_constraintVertical_bias="0.838" />-->
 
     <TextView
         android:id="@+id/new_report"
@@ -148,26 +164,13 @@
         android:textColor="#673AB7"
         android:textSize="20sp"
         android:textStyle="bold"
-        app:layout_constraintBottom_toTopOf="@+id/address"
+
+        app:layout_constraintBottom_toBottomOf="@+id/toolbarNewReport"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.138"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.0" />
-
-    <TextView
-        android:id="@+id/address"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Address"
-        android:textSize="16sp"
-        android:textStyle="bold"
-        app:layout_constraintBottom_toTopOf="@+id/street"
-        app:layout_constraintEnd_toEndOf="@+id/new_report"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="@+id/new_report"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="1.0" />
 
     <Button
         android:id="@+id/submit"
@@ -202,15 +205,15 @@
         android:layout_width="302dp"
         android:layout_height="48dp"
         android:background="#EABFFF"
+        android:hint="e.g. 360 Huntington Ave"
         android:textSize="16sp"
         android:textStyle="bold"
-        android:hint="e.g. 360 Huntington Ave"
         app:layout_constraintBottom_toTopOf="@+id/city"
         app:layout_constraintEnd_toEndOf="@+id/new_report"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="@+id/new_report"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.87" />
+        app:layout_constraintVertical_bias="1.0" />
 
     <TextView
         android:id="@+id/street"
@@ -233,10 +236,10 @@
         android:textStyle="bold"
         app:layout_constraintBottom_toTopOf="@+id/state_input"
         app:layout_constraintEnd_toEndOf="@+id/new_report"
-        app:layout_constraintHorizontal_bias="0.027"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="@+id/new_report"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.996" />
+        app:layout_constraintVertical_bias="1.0" />
 
     <TextView
         android:id="@+id/type"
@@ -246,22 +249,53 @@
         android:textStyle="bold"
         app:layout_constraintBottom_toTopOf="@+id/report_detail"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.524"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="@+id/new_report"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.828" />
+        app:layout_constraintVertical_bias="0.881" />
 
     <TextView
         android:id="@+id/time"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Time"
+        android:text="Date"
         android:textStyle="bold"
         app:layout_constraintBottom_toTopOf="@+id/report_detail"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.009"
+        app:layout_constraintHorizontal_bias="0.002"
         app:layout_constraintStart_toStartOf="@+id/new_report"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.83" />
+        app:layout_constraintVertical_bias="0.709" />
+
+
+    <TextView
+        android:id="@+id/hour"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Hour"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toTopOf="@+id/report_detail"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.514"
+        app:layout_constraintStart_toStartOf="@+id/new_report"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.709" />
+
+    <TextView
+        android:id="@+id/hour_input"
+        android:layout_width="128dp"
+        android:layout_height="48dp"
+        android:background="#EABFFF"
+        android:gravity="center"
+        android:hint="e.g. 22:05"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        android:visibility="visible"
+        app:layout_constraintBottom_toTopOf="@+id/report_detail"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.721"
+        app:layout_constraintStart_toStartOf="@+id/new_report"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.811" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

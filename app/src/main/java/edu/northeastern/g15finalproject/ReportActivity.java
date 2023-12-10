@@ -1,13 +1,21 @@
 package edu.northeastern.g15finalproject;
 
+import android.app.DatePickerDialog;
+import android.app.Dialog;
+import android.app.TimePickerDialog;
 import android.content.SharedPreferences;
+import android.icu.util.Calendar;
 import android.os.Bundle;
+import android.text.format.DateFormat;
 import android.view.View;
+import android.widget.DatePicker;
 import android.widget.TextView;
+import android.widget.TimePicker;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.fragment.app.DialogFragment;
 
 import com.google.firebase.database.FirebaseDatabase;
 
@@ -23,6 +31,11 @@ import java.util.concurrent.ExecutionException;
 public class ReportActivity extends AppCompatActivity {
     private static final String API_KEY = "40c35a44baff4920bfcd47f63a9d247b";
     private static final String BASE_URL = "https://api.opencagedata.com/geocode/v1/json";
+    private static int hourOfDay;
+    private static int minute;
+    private static int year;
+    private static int month;
+    private static int day;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,7 +44,96 @@ public class ReportActivity extends AppCompatActivity {
         Toolbar toolbar = findViewById(R.id.toolbarNewReport);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+        findViewById(R.id.hour_input).setOnClickListener( v -> {
+                    new TimePickerFragment().show(getSupportFragmentManager(), "timePicker");
+                }
+        );
+
+        findViewById(R.id.date_input).setOnClickListener( v -> {
+                    new DatePickerFragment().show(getSupportFragmentManager(), "datePicker");
+                }
+        );
     }
+
+    public static class TimePickerFragment extends DialogFragment
+            implements TimePickerDialog.OnTimeSetListener {
+
+        @Override
+        public Dialog onCreateDialog(Bundle savedInstanceState) {
+            // Use the current time as the default values for the picker.
+            final Calendar c = Calendar.getInstance();
+            int hour = c.get(Calendar.HOUR_OF_DAY);
+            int minute = c.get(Calendar.MINUTE);
+
+            // Create a new instance of TimePickerDialog and return it.
+            return new TimePickerDialog(getActivity(), this, hour, minute,
+                    DateFormat.is24HourFormat(getActivity()));
+        }
+
+        @Override
+        public void onTimeSet(TimePicker view, int hourOfDay_p, int minute_p) {
+            System.out.println("Time set");
+            System.out.println(hourOfDay);
+            System.out.println(minute);
+
+            hourOfDay = hourOfDay_p;
+            minute = minute_p;
+
+            ((ReportActivity)getActivity()).updateTime();
+        }
+    }
+
+    public static class DatePickerFragment extends DialogFragment
+            implements DatePickerDialog.OnDateSetListener {
+
+        @Override
+        public Dialog onCreateDialog(Bundle savedInstanceState) {
+            // Use the current date as the default date in the picker.
+            final Calendar c = Calendar.getInstance();
+            int year = c.get(Calendar.YEAR);
+            int month = c.get(Calendar.MONTH);
+            int day = c.get(Calendar.DAY_OF_MONTH);
+
+            // Create a new instance of DatePickerDialog and return it.
+            return new DatePickerDialog(requireContext(), this, year, month, day);
+        }
+
+        @Override
+        public void onDateSet(DatePicker view, int year_p, int month_p, int day_p) {
+            // Do something with the date the user picks.
+            System.out.println("Date set");
+            System.out.println(year);
+            System.out.println(month);
+            System.out.println(day);
+
+            year = year_p;
+            month = month_p;
+            day = day_p;
+
+            ((ReportActivity)getActivity()).updateDate();
+        }
+    }
+
+    public void updateDate() {
+        TextView dateText = findViewById(R.id.date_input);
+        dateText.setText(new StringBuilder().append(month + 1).append("/").append(day).append("/").append(year).append(" "));
+    }
+
+    public void updateTime() {
+        TextView timeText = findViewById(R.id.hour_input);
+        timeText.setText(new StringBuilder().append(hourOfDay).append(":").append(minute).append(" "));
+    }
+
+    private static boolean isInitialized(Object... variables) {
+        for (Object variable : variables) {
+            if (variable == null) {
+                return false;
+            }
+        }
+        return true;
+    }
+
 
     public void addReport(View view) throws ExecutionException, InterruptedException {
         String street_address = ((TextView)findViewById(R.id.street_address_input)).getText().toString();
@@ -41,24 +143,42 @@ public class ReportActivity extends AppCompatActivity {
         String detail = ((TextView)findViewById(R.id.report_detail_input)).getText().toString();
         String type = ((TextView)findViewById(R.id.type_input)).getText().toString();
 //        Long time = Long.valueOf(((TextView)findViewById(R.id.time_input)).getText().toString());
-        String time = ((TextView)findViewById(R.id.time_input)).getText().toString();
+        String time = year + "-" + month + "-" +day + "T" + hourOfDay + ":" + minute + ":00.000Z";
+
+//        String time = ((TextView)findViewById(R.id.time_input)).getText().toString();
 
         String utcTimePattern = "\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}\\.\\d{3}Z";
+        boolean timeAllInitialized = isInitialized(year, month, day, hourOfDay, minute);
+        System.out.println("isTimeAllInitialized: " + timeAllInitialized);
+        System.out.println(year+ month+ day+ hourOfDay+ minute);
 
-        Boolean isTimeFormatCorrect = true;
-        if (!time.matches(utcTimePattern)) {
-            ((TextView)findViewById(R.id.time_input)).setText("");
-            isTimeFormatCorrect = false;
-            showToast("Time has to be in the following format: YYYY-MM-DDTHH:mm:ss.SSSZ");
-            // Valid UTC time in the specified format
+        boolean yearInitialized;
+        if (year + month + day == 0) {
+            yearInitialized = false;
+        } else {
+            yearInitialized = true;
         }
+        boolean hourInitialized;
+        if (hourOfDay + minute == 0) {
+            hourInitialized = false;
+        } else {
+            hourInitialized = true;
+        }
+
+//        Boolean isTimeFormatCorrect = true;
+//        if (!time.matches(utcTimePattern)) {
+//            ((TextView)findViewById(R.id.time_input)).setText("");
+//            isTimeFormatCorrect = false;
+//            showToast("Time has to be in the following format: YYYY-MM-DDTHH:mm:ss.SSSZ");
+//            // Valid UTC time in the specified format
+//        }
 
         if (isInputEmpty(street_address) || isInputEmpty(detail) || isInputEmpty(city)
                 || isInputEmpty(state) || isInputEmpty(zipcode)
-                || isInputEmpty(type) || isInputEmpty(String.valueOf(time))) {
+                || isInputEmpty(type) || !yearInitialized || !hourInitialized) {
             showToast("Address and details cannot be empty");
         } else {
-            if (isTimeFormatCorrect) {
+
                 String username = getCurrentloginUsername();
                 Boolean isTesting = true;
 
@@ -84,10 +204,10 @@ public class ReportActivity extends AppCompatActivity {
                 ((TextView) findViewById(R.id.state_input)).setText("");
                 ((TextView) findViewById(R.id.zipcode_input)).setText("");
                 ((TextView)findViewById(R.id.report_detail_input)).setText("");
-                ((TextView)findViewById(R.id.time_input)).setText("");
+                ((TextView)findViewById(R.id.date_input)).setText("");
+                ((TextView)findViewById(R.id.hour_input)).setText("");
                 ((TextView)findViewById(R.id.type_input)).setText("");
             }
-        }
     }
 
     private boolean isInputEmpty(String input) {
