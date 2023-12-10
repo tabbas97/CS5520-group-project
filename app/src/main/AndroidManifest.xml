@@ -25,25 +25,39 @@
         tools:targetApi="31">
         <activity
             android:name=".EditPostActivity"
-            android:exported="false" />
+            android:exported="false"
+            android:screenOrientation="sensorPortrait"
+            />
         <activity
             android:name=".AddPostActivity"
-            android:exported="false" />
+            android:exported="false"
+            android:screenOrientation="sensorPortrait"
+            />
         <activity
             android:name=".MessageBoardPostViewActivity"
-            android:exported="false" />
+            android:exported="false"
+            android:screenOrientation="sensorPortrait"
+            />
         <activity
             android:name=".MessageBoardsActivity"
-            android:exported="false" />
+            android:exported="false"
+            android:screenOrientation="sensorPortrait"
+            />
         <activity
             android:name=".FriendViewActivity"
-            android:exported="false" />
+            android:exported="false"
+            android:screenOrientation="sensorPortrait"
+            />
         <activity
             android:name=".RegisterActivity"
-            android:exported="false" />
+            android:exported="false"
+            android:screenOrientation="sensorPortrait"
+            />
         <activity
             android:name=".BasicPermissionMissingActivity"
-            android:exported="false" />
+            android:exported="false"
+            android:screenOrientation="sensorPortrait"
+            />
         <!--
              TODO: Before you run your application, you need a Google Maps API key.
 
@@ -61,31 +75,45 @@
 
         <activity
             android:name=".FriendsActivity"
-            android:exported="false" />
+            android:exported="false"
+            android:screenOrientation="sensorPortrait"
+            />
         <activity
             android:name=".EditProfileActivity"
-            android:exported="false" />
+            android:exported="false"
+            android:screenOrientation="sensorPortrait"
+            />
         <activity
             android:name=".ProfileActivity"
-            android:exported="false" />
+            android:exported="false"
+            android:screenOrientation="sensorPortrait"
+            />
         <activity
             android:name=".ReportActivity"
             android:exported="false"
-            android:parentActivityName=".ReportMenuActivity" />
+            android:parentActivityName=".ReportMenuActivity"
+            android:screenOrientation="sensorPortrait"
+            />
         <activity
             android:name=".ReportMenuActivity"
             android:exported="false"
-            android:parentActivityName=".MainActivity" />
+            android:parentActivityName=".MainActivity"
+            android:screenOrientation="sensorPortrait"
+            />
         <activity
             android:name=".ReportNearbyActivity"
             android:exported="false"
-            android:parentActivityName=".ReportMenuActivity" />
+            android:parentActivityName=".ReportMenuActivity"
+            android:screenOrientation="sensorPortrait"
+            />
         <activity
             android:name=".TestActivity"
             android:exported="false" />
         <activity
             android:name=".MainActivity"
-            android:exported="true">
+            android:exported="true"
+            android:screenOrientation="sensorPortrait"
+            >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
