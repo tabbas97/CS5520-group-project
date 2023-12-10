@@ -41,29 +41,56 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Title"
-                android:textSize="20sp"
+                android:textSize="25sp"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
-            <TextView
-                android:id="@+id/message_board_own_post_date"
-                android:layout_width="wrap_content"
+            <androidx.appcompat.widget.LinearLayoutCompat
+                android:layout_marginVertical="5dp"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Date"
-                android:textSize="10sp"
-                app:layout_constraintLeft_toLeftOf="@+id/message_board_own_post_title"
-                app:layout_constraintTop_toBottomOf="@+id/message_board_own_post_title" />
+                android:orientation="horizontal"
+                android:weightSum="100"
+                android:id="@+id/message_board_own_date_user_layout"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/message_board_own_post_title"
+                >
+
+                <TextView
+                    android:id="@+id/message_board_own_post_user"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="User"
+                    android:layout_weight="50"
+                    android:textSize="20sp"
+                    app:layout_constraintLeft_toRightOf="@+id/message_board_own_post_date"
+                    app:layout_constraintTop_toBottomOf="@+id/message_board_own_post_title" />
+
+                <TextView
+                    android:id="@+id/message_board_own_post_date"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Date"
+                    android:textSize="20sp"
+                    android:layout_weight="50"
+                    app:layout_constraintLeft_toLeftOf="@+id/message_board_own_post_title"
+                    app:layout_constraintTop_toBottomOf="@+id/message_board_own_post_title" />
+
+
+            </androidx.appcompat.widget.LinearLayoutCompat>
 
             <!--   +1 Count textview    -->
             <TextView
                 android:id="@+id/message_board_own_post_plus_one_count"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text=" "
-                android:textSize="10sp"
+                android:text="0"
+                android:textSize="20sp"
+                android:layout_marginLeft="10dp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintLeft_toRightOf="@+id/message_board_own_post_plus_one_button"
-                app:layout_constraintTop_toBottomOf="@+id/message_board_own_post_date" />
+                app:layout_constraintTop_toBottomOf="@+id/message_board_own_date_user_layout" />
 
             <!--   +1 Button    -->
             <ImageButton
@@ -72,12 +99,12 @@
                 android:layout_height="wrap_content"
                 android:layout_margin="16dp"
                 android:background="@android:color/transparent"
-                android:maxWidth="10sp"
-                android:maxHeight="10sp"
+                android:maxWidth="20sp"
+                android:maxHeight="20sp"
                 android:src="@drawable/baseline_exposure_plus_1_10"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toStartOf="@+id/message_board_own_post_plus_one_count"
-                app:layout_constraintTop_toBottomOf="@+id/message_board_own_post_date" />
+                app:layout_constraintTop_toBottomOf="@+id/message_board_own_date_user_layout" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -85,7 +112,7 @@
             android:id="@+id/content_comments_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:paddingVertical="5dp"
+            android:paddingBottom="60dp"
             android:fillViewport="true"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
@@ -94,7 +121,7 @@
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:paddingVertical="5dp"
+                android:paddingBottom="60dp"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toRightOf="parent"
                 app:layout_constraintTop_toTopOf="parent">
@@ -140,7 +167,7 @@
                     app:layout_constraintLeft_toLeftOf="parent"
                     app:layout_constraintRight_toRightOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/message_board_own_post_comments_count"
-                    tools:listitem="@layout/activity_message_board_comment_item"
+                    tools:listitem="@layout/comment_item_layout"
                     tools:itemCount="4"
                     />
 
@@ -148,7 +175,6 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"
-
                     android:weightSum="100"
                     app:layout_constraintLeft_toLeftOf="parent"
                     app:layout_constraintRight_toRightOf="parent"
@@ -171,8 +197,8 @@
                     <Button
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:id="@+id/message_board_own_post_comment_submit_button"
-                        android:text="Submit"
+                        android:id="@+id/message_board_post_comment_submit_button"
+                        android:background="@drawable/baseline_add_comment_24"
                         android:layout_margin="5dp"
                         app:layout_constraintLeft_toLeftOf="parent"
                         app:layout_constraintRight_toRightOf="parent"

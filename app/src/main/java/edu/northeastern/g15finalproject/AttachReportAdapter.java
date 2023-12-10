@@ -2,29 +2,34 @@ package edu.northeastern.g15finalproject;
 
 import android.content.Context;
 import android.view.LayoutInflater;
-import android.view.View;
 import android.view.ViewGroup;
-import android.widget.BaseAdapter;
-import android.widget.TextView;
+import android.widget.Toast;
 
-import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 import java.util.TimeZone;
+import java.util.concurrent.atomic.AtomicReference;
 
 public class AttachReportAdapter extends RecyclerView.Adapter<AttachReportItemHolder> {
     private final Context context;
     private final List<Report> reportList;
+    private boolean isPaired = false;
+
+    private static List<Report> selectedReports;
+
+    public boolean isPaired() {
+        return isPaired;
+    }
 
     public AttachReportAdapter(Context context, List<Report> reportList) {
+        // , AtomicReference<List<Report>>
         this.context = context;
         this.reportList = reportList;
-
-        System.out.println("ATTACH REPORT : constructor");
-        System.out.println("ATTACH REPORT : reportList size = " + reportList.size());
+        this.isPaired = false;
+        selectedReports = new java.util.ArrayList<>();
     }
 
     @Override
@@ -51,11 +56,24 @@ public class AttachReportAdapter extends RecyclerView.Adapter<AttachReportItemHo
             // check if report is selected
             holder.isSelect = !holder.isSelect;
             if (holder.isSelect) {
-                holder.itemView.setBackgroundColor(context.getResources().getColor(R.color.white));
+                selectedReports.add(reportList.get(position));
+                System.out.println("ATTACH REPORT : selected = " + reportList.get(position).toString());
+                holder.itemView.setBackgroundColor(context.getResources().getColor(R.color.colorAccent));
             } else {
-                holder.itemView.setBackgroundColor(context.getResources().getColor(R.color.black));
+                selectedReports.remove(reportList.get(position));
+                System.out.println("ATTACH REPORT : unselected = " + reportList.get(position).toString());
+                holder.itemView.setBackgroundColor(context.getResources().getColor(R.color.white));
             }
+            System.out.println("ATTACH REPORT : selectedReports size = " + selectedReports.toString());
         });
+    }
+
+    public List<Report> getSelectedReports() {
+
+        System.out.println("ATTACH REPORT : getSelectedReports");
+        System.out.println("ATTACH REPORT : selectedReports size = " + selectedReports.toString());
+
+        return selectedReports;
     }
 
     @Override

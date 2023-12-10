@@ -86,5 +86,7 @@ public class EditPostActivity extends AppCompatActivity {
             setResult(MessageBoardPostViewActivity.EDITPOST_RESULT.SUCCESS.ordinal());
             finish();
         });
+
+
     }
 }

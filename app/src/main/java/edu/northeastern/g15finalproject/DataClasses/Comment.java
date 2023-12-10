@@ -19,16 +19,22 @@ public class Comment {
     public final String poster;
     public final String comment;
     public final String commentId;
-    public final List<String> commentLikes;
     public final long timeStamp;
     public final String postId;
 
-    public Comment(String poster, String comment, String commentId, List<String> commentLikes, long timeStamp, String postId) {
+    public Comment(String poster, String comment, String commentId, long timeStamp, String postId) {
         this.poster = poster;
         this.comment = comment;
         this.commentId = commentId;
-        this.commentLikes = commentLikes;
         this.timeStamp = timeStamp;
         this.postId = postId;
+    }
+
+    public Comment(String username, String body, String commentId, Long timeStamp) {
+        this.poster = username;
+        this.comment = body;
+        this.commentId = commentId;
+        this.timeStamp = timeStamp;
+        this.postId = "";
     }
 }

@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.icu.util.Calendar;
 import android.location.Location;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.format.DateFormat;
 import android.widget.Button;
@@ -24,9 +25,13 @@ import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationCallback;
 import com.google.android.gms.location.LocationResult;
 import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.core.Repo;
+
+import org.w3c.dom.ls.LSException;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 
 import edu.northeastern.g15finalproject.DataClasses.Post;
 
@@ -156,53 +161,134 @@ public class AddPostActivity extends AppCompatActivity {
         // Set recyclerview showing the reports
         RecyclerView selectReportslistView = findViewById(R.id.add_post_attach_reports_recycler_view);
         List<Report> reportList = new ArrayList<>();
+
+        // Use async task to get the reports
+        AsyncTask.execute(() -> {
+            // Get the reports
+            List<Report> reportList1 = new ArrayList<>();
+
+            // Create a FirebaseRTDB instance
+            com.google.firebase.database.FirebaseDatabase firebaseDatabase = com.google.firebase.database.FirebaseDatabase.getInstance();
+            DatabaseReference databaseReference = firebaseDatabase.getReferenceFromUrl(getString(R.string.firebase_database_url) + "/report");
+
+            // Get current user from shared preferences
+            SharedPreferences sharedPreferences = getSharedPreferences("userdata", MODE_PRIVATE);
+            String currentUserName = sharedPreferences.getString("currentUserName", null);
+
+            // Get the reports
+            databaseReference.get().addOnCompleteListener(task -> {
+                if (task.isSuccessful()) {
+                    // Get the reports
+                    for (com.google.firebase.database.DataSnapshot dataSnapshot : task.getResult().getChildren()) {
+                        // Get the report
+                        String street_address = dataSnapshot.child("street_address").getValue(String.class);
+                        String city = dataSnapshot.child("city").getValue(String.class);
+                        String state = dataSnapshot.child("state").getValue(String.class);
+                        String zipcode = dataSnapshot.child("zipcode").getValue(String.class);
+                        String detail = dataSnapshot.child("detail").getValue(String.class);
+                        String type = dataSnapshot.child("type").getValue(String.class);
+                        String username = dataSnapshot.child("username").getValue(String.class);
+                        if (!username.equals(currentUserName)) {
+                            // Skip the report if it is not the current user's report. They can only attach their own reports
+                            continue;
+                        }
+                        Long time = dataSnapshot.child("time").getValue(Long.class);
+                        Boolean isTesting = dataSnapshot.child("isTesting").getValue(Boolean.class);
+                        double latitude = dataSnapshot.child("latitude").getValue(double.class);
+                        double longitude = dataSnapshot.child("longitude").getValue(double.class);
+
+                        // Create the report
+                        Report report = new Report(
+                                street_address,
+                                city,
+                                state,
+                                zipcode,
+                                detail,
+                                type,
+                                username,
+                                time,
+                                isTesting,
+                                latitude,
+                                longitude
+                        );
+                        reportList1.add(report);
+                    }
+                } else {
+                    // Failed to get the reports
+                    Toast.makeText(getApplicationContext(), "Failed to get reports", Toast.LENGTH_SHORT).show();
+                }
+            });
+
+            while (reportList1.isEmpty()) {
+                try {
+                    Thread.sleep(100);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+
+            reportList.addAll(reportList1);
+
+            runOnUiThread(() -> {
+                selectReportslistView.setLayoutManager(new androidx.recyclerview.widget.LinearLayoutManager(this));
+                selectReportslistView.setAdapter(new AttachReportAdapter(this, reportList));
+                selectReportslistView.getAdapter().notifyDataSetChanged();
+            });
+        });
+
         /*
         public Report(String street_address, String city, String state, String zipcode, String detail,
                   String type, String username, Long time, Boolean isTesting,
                   double latitude, double longitude)
          */
-        reportList.add(
-                new Report(
-                        "123 Main St",
-                        "Boston",
-                        "MA",
-                        "02115",
-                        "This is a test report",
-                        "People Loitering",
-                        "tabbas97",
-                        1234567890L,
-                        true,
-                        42.3601,
-                        -71.0589
-                )
-        );
-        reportList.add(
-                new Report(
-                        "123 Main St",
-                        "Boston",
-                        "MA",
-                        "02115",
-                        "This is a test report2",
-                        "People Loitering",
-                        "tabbas97",
-                        1234567890L,
-                        true,
-                        42.3601,
-                        -71.0589
-                )
-        );
-
-        runOnUiThread(() -> {
-            selectReportslistView.setLayoutManager(new androidx.recyclerview.widget.LinearLayoutManager(this));
-            selectReportslistView.setAdapter(new AttachReportAdapter(this, reportList));
-            selectReportslistView.getAdapter().notifyDataSetChanged();
-        });
+        // reportList.add(
+        //         new Report(
+        //                 "123 Main St",
+        //                 "Boston",
+        //                 "MA",
+        //                 "02115",
+        //                 "This is a test report",
+        //                 "People Loitering",
+        //                 "tabbas97",
+        //                 1234567890L,
+        //                 true,
+        //                 42.3601,
+        //                 -71.0589
+        //         )
+        // );
+        // reportList.add(
+        //         new Report(
+        //                 "123 Main St",
+        //                 "Boston",
+        //                 "MA",
+        //                 "02115",
+        //                 "This is a test report2",
+        //                 "People Loitering",
+        //                 "tabbas97",
+        //                 1234567890L,
+        //                 true,
+        //                 42.3601,
+        //                 -71.0589
+        //         )
+        // );
+        //
+        // runOnUiThread(() -> {
+        //     selectReportslistView.setLayoutManager(new androidx.recyclerview.widget.LinearLayoutManager(this));
+        //     selectReportslistView.setAdapter(new AttachReportAdapter(this, reportList));
+        //     selectReportslistView.getAdapter().notifyDataSetChanged();
+        // });
 
         System.out.println("SET ADAPTER SUCCESSFUL");
 
         Button submitButton = findViewById(R.id.add_post_submit_button);
         submitButton.setOnClickListener(
                 v -> {
+
+                    selectedReports = ((AttachReportAdapter)selectReportslistView.getAdapter()).getSelectedReports();
+
+                    System.out.println("SUBMIT BUTTON CLICKED");
+                    System.out.println("Reports Selected : " + selectedReports.size());
+
                     // Validate Post Title
                     TextView postTitle = findViewById(R.id.add_post_title);
 
@@ -352,7 +438,7 @@ public class AddPostActivity extends AppCompatActivity {
                     postRef.child("title").setValue(post.title);
                     postRef.child("body").setValue(post.body);
                     postRef.child("postId").setValue(post.postId);
-                    postRef.child("attached_report").setValue(post.attached_report);
+                    postRef.child("attached_report").setValue(selectedReports);
                     postRef.child("time").setValue(post.time);
                     postRef.child("testing").setValue(post.testing);
                     postRef.child("location").setValue(post.location);

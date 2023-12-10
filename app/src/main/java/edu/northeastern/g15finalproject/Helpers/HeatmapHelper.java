@@ -181,6 +181,14 @@ public class HeatmapHelper {
         // Convert the custom weighted latlngs to weighted latlngs
         List<WeightedLatLng> weightedLatLngs = convertCustomWeightedLatLongs2WeightedLatLngs(previousSet);
 
+        // Get the max intensity from the weighted latlngs
+        double maxIntensity = 0;
+        for (WeightedLatLng weightedLatLng : weightedLatLngs) {
+            if (weightedLatLng.getIntensity() > maxIntensity) {
+                maxIntensity = weightedLatLng.getIntensity();
+            }
+        }
+
         // gradient for the heatmap
         int[] colors = {
                 android.graphics.Color.rgb(102, 225, 0), // green
@@ -197,9 +205,9 @@ public class HeatmapHelper {
         try {
             heatmapTileProvider = new HeatmapTileProvider.Builder()
                     .weightedData(weightedLatLngs)
-                    .opacity(0.6)
-                    .radius(50)
-                    .maxIntensity(1)
+                    .opacity(1)
+                    .radius(40)
+                    .maxIntensity(maxIntensity)
                     .build();
             System.out.println("Created heatmap tile provider");
         } catch (Exception e) {

@@ -43,11 +43,11 @@
         android:focusable="true"
         app:srcCompat="@drawable/baseline_my_location_24"
         app:backgroundTint="@color/white"
-        app:layout_constraintBottom_toTopOf="@+id/add_report_button"
+        app:layout_constraintBottom_toBottomOf="@+id/sos_button"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.95"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/sos_button"
         app:layout_constraintVertical_bias="0.95" />
 
     <FrameLayout
@@ -244,7 +244,8 @@
         app:layout_constraintHorizontal_bias="0.95"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintBottom_toTopOf="@+id/bottom_buttons_wrapper_layout"
-        app:layout_constraintVertical_bias="0.9" />
+        app:layout_constraintVertical_bias="0.9"
+        android:visibility="gone"/>
 
     <!-- Button to launch the dialog to show the benefits of registering/logging in  -->
     <Button
@@ -256,7 +257,7 @@
         android:text="Why Login?"
         android:textColor="@color/white"
         android:layout_marginTop="10dp"
-        android:textSize="10sp"
+        android:textSize="15sp"
         android:background="@drawable/rounded_edit_text"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.05"
