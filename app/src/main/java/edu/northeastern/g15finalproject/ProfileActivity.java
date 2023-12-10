@@ -10,6 +10,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -34,6 +35,7 @@ public class ProfileActivity extends AppCompatActivity {
     TextView username_tv;
     TextView full_name_tv;
     TextView dob_tv;
+    Button guest_btn;
     boolean firstLogin = false;
 
     @Override
@@ -45,6 +47,8 @@ public class ProfileActivity extends AppCompatActivity {
         currentUserName = sharedPref.getString("currentUserName", null);
         firstLogin = getIntent().getBooleanExtra("firstLogin", false);
 
+        System.out.println("GBUTTON : " + guest_btn);
+
         if(currentUserName == null){
             setContentView(R.layout.login_activity);
             username_tv = findViewById(R.id.username_tv);
@@ -54,6 +58,8 @@ public class ProfileActivity extends AppCompatActivity {
             getLoggedInUser();
         }
 
+        guest_btn = findViewById(R.id.guest_button);
+
         if(firstLogin){
             Toast.makeText(this, "Registration enables all features",
                     Toast.LENGTH_SHORT).show();
@@ -61,6 +67,29 @@ public class ProfileActivity extends AppCompatActivity {
             SharedPreferences.Editor editor = sharedPref.edit();
             editor.putBoolean("firstLoginAttempted", true);
         }
+
+        if(currentUserName == null){
+            guest_btn.setVisibility(View.VISIBLE);
+        }
+        else{
+            guest_btn.setVisibility(View.INVISIBLE);
+        }
+
+        guest_btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // Insert firstLoginAttempted into shared preferences
+                SharedPreferences sharedPref = getSharedPreferences("userdata", Context.MODE_PRIVATE);
+                SharedPreferences.Editor editor = sharedPref.edit();
+                editor.putBoolean("firstLoginAttempted", true);
+                editor.commit();
+
+                // Return to main activity
+                Intent intent = new Intent(ProfileActivity.this, MainActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                startActivity(intent);
+            }
+        });
     }
 
     public void onLoginClick(View view) {
