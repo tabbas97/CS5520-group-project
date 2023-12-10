@@ -10,9 +10,9 @@ Team Members :
 			-
 	2. Upmanyu Shrivastava
 		- shrivastava.u@northeastern.edu
-		- TODO
+		- ushrivas9
 		- Contributions:
-			- TODO
+			- Sign in page, Registration Page, Profile Pages, Edit User, Manage Friends, Logout, Map location search (layout and logic)
 	3. Kaiqi Zhang
 		- zhang.kaiq@northeastern.edu
 		- kaiqiz8
