@@ -74,7 +74,7 @@ public class MainScreenMapFragment extends Fragment {
             googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(showLocation, 17));
 
             // Set the toggle button to invisible
-            reCenterButton.setVisibility(reCenterButton.INVISIBLE);
+            reCenterButton.setVisibility(reCenterButton.VISIBLE);
 
             // Set the toggle button to visible when the camera is moved and the center of the view is not the same as the user's location
             googleMap.setOnCameraMoveListener(new GoogleMap.OnCameraMoveListener() {

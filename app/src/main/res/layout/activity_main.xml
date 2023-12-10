@@ -40,6 +40,7 @@
         android:layout_height="wrap_content"
         android:id="@+id/location_recenter_button"
         android:clickable="true"
+        android:visibility="visible"
         android:focusable="true"
         app:srcCompat="@drawable/baseline_my_location_24"
         app:backgroundTint="@color/white"

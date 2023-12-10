@@ -1,5 +1,6 @@
 package edu.northeastern.g15finalproject;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
@@ -20,6 +21,13 @@ import java.util.concurrent.atomic.AtomicReference;
 
 public class BasicPermissionMissingActivity extends AppCompatActivity {
 
+    public enum PermissionStatus {
+        ALL_GRANTED,
+        COMMUNICATION_DENIED,
+        LOCATION_DENIED,
+        ALL_DENIED
+    }
+
     // Required Permissions - SMS, Location, Call
     static List<String> RequiredPermissions = new ArrayList(){{
         add("android.permission.ACCESS_FINE_LOCATION");
@@ -34,6 +42,13 @@ public class BasicPermissionMissingActivity extends AppCompatActivity {
         put("android.permission.SEND_SMS", "SMS");
         put("android.permission.CALL_PHONE", "Call");
     }};
+
+    // @Override
+    // public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+    //     super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+    //
+    //     if
+    // }
 
     public static List<String> getMissingPermissions(AppCompatActivity mainActivity) {
         List<String> missingPermissionsList = new ArrayList<>();
@@ -65,6 +80,9 @@ public class BasicPermissionMissingActivity extends AppCompatActivity {
 
         // If there are no missing permissions, finish the activity
         if (missingPermissionsList.get().size() == 0) {
+            Intent newIntent = new Intent(this, MainActivity.class);
+            newIntent.putExtra("all_permissions_granted", true);
+            setResult(PermissionStatus.ALL_GRANTED.ordinal(), newIntent);
             finish();
         }
 
@@ -80,11 +98,17 @@ public class BasicPermissionMissingActivity extends AppCompatActivity {
                     1);
             missingPermissionsList.set(getMissingPermissions(this));
             if (missingPermissionsList.get().size() == 0) {
-
                 Intent newIntent = new Intent(this, MainActivity.class);
                 newIntent.putExtra("all_permissions_granted", true);
                 finish();
-
+            } else {
+                Toast.makeText(getApplicationContext(), "Proceeding without all permissions. SOS will not function", Toast.LENGTH_SHORT).show();
+                // Insert the status of all_permissions_granted
+                Intent newIntent = new Intent(this, MainActivity.class);
+                // Clear the top of the stack
+                newIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                newIntent.putExtra("all_permissions_granted", false);
+                finish();
             }
         });
 

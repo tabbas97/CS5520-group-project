@@ -16,6 +16,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.VibrationEffect;
 import android.os.Vibrator;
+
 import androidx.room.RoomDatabase;
 
 import android.annotation.SuppressLint;
@@ -66,6 +67,8 @@ public class MainActivity extends AppCompatActivity {
     LocationRequest locationRequest;
     LocationCallback locationCallback;
 
+    Map<String, Boolean> permissions = new HashMap<>();
+
     Location deviceLocation;
     Location mapLocation;
     String locationLabel = "You are here";
@@ -76,9 +79,15 @@ public class MainActivity extends AppCompatActivity {
 
     List<EmergencyContact> emergencyContacts = null;
 
+    Fragment mapFragment = null;
+
     boolean isSOSButtonEnabled = false;
+    boolean isLocationFullyEnabled = false;
+    boolean isCommunicationFullyEnabled = false;
 
     SearchView searchLocation;
+    FloatingActionButton sosButton;
+    Thread tileMakerThread;
 
     enum RequestCode {
         BASIC_PERMISSION_MISSING_ACTIVITY(1);
@@ -94,73 +103,36 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+    private void enableLocationFeatures() {
 
-        FirebaseApp.initializeApp(this);
+        // Attempt to validate that we have location permissions
 
-        // Check for all three permissions
-        if (
-                (ContextCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) ||
-                (ContextCompat.checkSelfPermission(this, android.Manifest.permission.SEND_SMS) != PackageManager.PERMISSION_GRANTED) ||
-                (ContextCompat.checkSelfPermission(this, android.Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED)
-        ) {
-            this.isSOSButtonEnabled = false;
-        } else {
-            this.isSOSButtonEnabled = true;
+        // Get the approximate location of the device
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            // TODO: Consider calling
+            //    ActivityCompat#requestPermissions
+            // here to request the missing permissions, and then overriding
+            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+            //                                          int[] grantResults)
+            // to handle the case where the user grants the permission. See the documentation
+            // for ActivityCompat#requestPermissions for more details.
+            return;
         }
+        fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
+        fusedLocationProviderClient.getLastLocation().addOnSuccessListener(this, location -> {
+            if (location != null) {
+                // Use the location object to get the latitude and longitude
+                LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
+                deviceLocation = location;
+                System.out.println("Latitude: " + location.getLatitude());
+                System.out.println("Longitude: " + location.getLongitude());
+            }
+        });
+        fusedLocationProviderClient.getLastLocation().addOnFailureListener(this, e -> {
+            System.out.println("Failed to get location");
+        });
 
-        // Check for location permission
-        // If permission is not granted, request it
-        if (ContextCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION)
-                != PackageManager.PERMISSION_GRANTED) {
-            // Permission is not granted
-            // Request permission
-            ActivityCompat.requestPermissions(this,
-                    new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION},
-                    1);
-        }
-
-        // Check for text message permission
-        // Check for emergency call permission
-        // If permission is not granted, request it
-        if (
-                (ContextCompat.checkSelfPermission(this, android.Manifest.permission.SEND_SMS) != PackageManager.PERMISSION_GRANTED) ||
-                (ContextCompat.checkSelfPermission(this, android.Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED)
-        ) {
-            // Permission is not granted
-            // Request permission
-            ActivityCompat.requestPermissions(this,
-                    new String[]{
-                            android.Manifest.permission.SEND_SMS,
-                            Manifest.permission.CALL_PHONE,
-                    },
-                    1);
-        }
-
-        if (ContextCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION)
-                == PackageManager.PERMISSION_GRANTED) {
-            fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
-
-            // Get the approximate location of the device
-            fusedLocationProviderClient.getLastLocation().addOnSuccessListener(this, location -> {
-                if (location != null) {
-                    // Use the location object to get the latitude and longitude
-                    LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
-                    deviceLocation = location;
-                    System.out.println("Latitude: " + location.getLatitude());
-                    System.out.println("Longitude: " + location.getLongitude());
-                }
-            });
-            fusedLocationProviderClient.getLastLocation().addOnFailureListener(this, e -> {
-                System.out.println("Failed to get location");
-            });
-
-        }
-
-        Fragment mapFragment = new MainScreenMapFragment();
+        mapFragment = new MainScreenMapFragment();
 
         // Setting listeners
         if (deviceLocation != null) {
@@ -215,12 +187,14 @@ public class MainActivity extends AppCompatActivity {
         getSupportFragmentManager().beginTransaction()
                 .replace(R.id.map_fragment, mapFragment).commit();
 
-        // Start location updates
-        fusedLocationProviderClient.requestLocationUpdates(
-                locationRequest,
-                locationCallback,
-                Looper.getMainLooper()
-        );
+        // Start location updates if location permission is granted
+        if (Boolean.TRUE.equals(permissions.get(Manifest.permission.ACCESS_FINE_LOCATION))) {
+            fusedLocationProviderClient.requestLocationUpdates(
+                    locationRequest,
+                    locationCallback,
+                    Looper.getMainLooper()
+            );
+        }
 
         // Add listener to the recenter button
         FloatingActionButton toggleButton = findViewById(R.id.location_recenter_button);
@@ -228,6 +202,233 @@ public class MainActivity extends AppCompatActivity {
             ((MainScreenMapFragment)mapFragment).reCenterMap();
             buttonView.setVisibility(View.INVISIBLE);
         });
+
+        System.out.println("TileMakerThread state: " + tileMakerThread.getState());
+
+        if (tileMakerThread.getState() == Thread.State.NEW) {
+            tileMakerThread.start();
+        } else {
+            // Only rerun tile creation
+            new Thread(() -> {
+                MakeTiles();
+            }).start();
+            // Validate if
+        }
+
+        isLocationFullyEnabled = true;
+    }
+
+    private void enableCommunicationFeatures() {
+        // Update the SOS button and it's listener
+        sosButton.setOnClickListener(view -> {
+
+            // Emergency contacts load from shared preferences
+            SharedPreferences sharedPref = getSharedPreferences("userdata", Context.MODE_PRIVATE);
+            String emergencyContactsString = sharedPref.getString("emergencyContacts", null);
+
+            System.out.println("SOS Button clicked");
+            BasicPermissionMissingActivity.getMissingPermissions(this).forEach(permission -> {
+                System.out.println("Permission Missing: " + permission);
+            });
+
+            // Start a background thread to send the SMSes
+            Thread smsThread = new Thread(() -> {
+                // Send SMSes to the emergency contacts
+
+                Boolean anySMSsent = false;
+
+                Gson gson = new Gson();
+
+                Map<String, String> emContactMap = gson.fromJson(emergencyContactsString, Map.class);
+
+                if (emergencyContacts == null) {
+                    emergencyContacts = new ArrayList<>();
+                }
+
+                if (emContactMap == null) {
+                    emContactMap = new HashMap<>();
+                }
+
+                for (Map.Entry<String, String> entry : emContactMap.entrySet()) {
+                    emergencyContacts.add(
+                            new EmergencyContact(
+                                    entry.getKey().hashCode(),
+                                    entry.getKey(),
+                                    entry.getValue()
+                            )
+                    );
+                }
+
+                for (EmergencyContact emergencyContact : emergencyContacts) {
+                    System.out.println("Sending SMS to: " + emergencyContact.phoneNumber);
+                    // Send SMS to the emergency contact
+                    SmsManager smsManager = SmsManager.getDefault();
+
+                    // Send String
+                    String sendString = "I need help";
+                    if (mapLocation != null) {
+                        sendString += " at " + mapLocation.getLatitude() + ", " + mapLocation.getLongitude();
+                    }
+                    smsManager.sendTextMessage(emergencyContact.phoneNumber, null, sendString, null, null);
+                    anySMSsent = true;
+                }
+
+                if (anySMSsent) {
+                    runOnUiThread(() -> {
+                        Toast.makeText(this, "SMS sent to emergency contacts", Toast.LENGTH_SHORT).show();
+                    });
+                } else {
+                    runOnUiThread(() -> {
+                        Toast.makeText(this, "No emergency contacts found", Toast.LENGTH_SHORT).show();
+                    });
+                }
+            });
+
+            smsThread.start();
+
+            Intent intent = new Intent(Intent.ACTION_CALL);
+            //                intent.setData(Uri.parse("tel:+16198970892")); // Test number
+            intent.setData(Uri.parse("tel:911")); // Emergency number
+            if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.CALL_PHONE) == PackageManager.PERMISSION_GRANTED) {
+                this.startActivity(intent);
+
+                // Get instance of Vibrator from current Context
+                Vibrator v = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
+
+                // Initiate a long two pulse vibration
+                VibrationEffect vibrationEffect = VibrationEffect.createWaveform(
+                        new long[]{
+                                0, 2000, 100, 2000, 100, 2000
+                        }, -1
+                );
+
+                // Vibrate for 400 milliseconds
+                v.vibrate(vibrationEffect);
+            }
+        });
+
+        isCommunicationFullyEnabled = true;
+    }
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+
+        // Check which permissions are granted. Set the SOS button accordingly
+        if (requestCode == 1) {
+            List<String> unGrantedPermissions = new ArrayList<>();
+
+            // Make the permissions map
+            for (String permission : permissions) {
+                this.permissions.put(permission, false);
+            }
+
+            // Check if all permissions are granted
+            for (int i = 0; i < permissions.length; i++) {
+                if (grantResults[i] == PackageManager.PERMISSION_GRANTED) {
+                    // Permission is granted
+                    this.permissions.put(permissions[i], true);
+                } else {
+                    // Permission is not granted
+                    this.permissions.put(permissions[i], false);
+                    unGrantedPermissions.add(permissions[i]);
+                }
+            }
+
+            if (this.permissions.get(Manifest.permission.ACCESS_FINE_LOCATION)) {
+                enableLocationFeatures();
+            } else if (
+                    this.permissions.get(Manifest.permission.ACCESS_COARSE_LOCATION)
+                            && !this.permissions.get(Manifest.permission.ACCESS_FINE_LOCATION)
+            ) {
+                // Do not enable location features - Map cannot center to user's location
+                Toast.makeText(
+                        this,
+                        "Fine Location permission denied. App cannot function. App will exit",
+                        Toast.LENGTH_SHORT
+                ).show();
+                // Exit the app
+                finish();
+            }
+
+            if (this.permissions.get(Manifest.permission.SEND_SMS) &&
+                    this.permissions.get(Manifest.permission.CALL_PHONE)) {
+                enableCommunicationFeatures();
+            } else {
+                // Launch the basic permission missing activity
+                Intent intent = new Intent(this, BasicPermissionMissingActivity.class);
+                startActivityForResult(intent, RequestCode.BASIC_PERMISSION_MISSING_ACTIVITY.getValue());
+            }
+
+            if (unGrantedPermissions.size() > 0) {
+                // Launch the basic permission missing activity
+                Intent intent = new Intent(this, BasicPermissionMissingActivity.class);
+                startActivityForResult(intent, RequestCode.BASIC_PERMISSION_MISSING_ACTIVITY.getValue());
+            }
+        } else {
+            System.out.println("Request code unknown.");
+            System.out.println("Request code: " + requestCode);
+            finish();
+        }
+    }
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+
+        FirebaseApp.initializeApp(this);
+
+        // SOS Button listener
+        sosButton = findViewById(R.id.sos_button);
+
+        // Add default listener to the SOS button - BasicPermissionMissingActivity
+        sosButton.setOnClickListener(view -> {
+            // Launch the basic permission missing activity
+            Intent intent = new Intent(this, BasicPermissionMissingActivity.class);
+            startActivityForResult(intent, RequestCode.BASIC_PERMISSION_MISSING_ACTIVITY.getValue());
+        });
+
+        // This must be prepared in advance for the enableLocationFeatures() method to function
+        // as expected on first launch of the app when permissions are being granted only then
+
+        // Background thread to get all the reports, get the locations of the reports, and the types of the reports
+        // From firebase rtdb
+        tileMakerThread = new Thread(() -> {
+            MakeTiles();
+        });
+
+        // Check for text message permission
+        // Check for emergency call permission
+        // If permission is not granted, request it
+        if (
+                (ContextCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) ||
+                (ContextCompat.checkSelfPermission(this, android.Manifest.permission.SEND_SMS) != PackageManager.PERMISSION_GRANTED) ||
+                (ContextCompat.checkSelfPermission(this, android.Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED)
+        ) {
+            // Permission is not granted
+            // Request permission
+            ActivityCompat.requestPermissions(this,
+                    new String[]{
+                            Manifest.permission.ACCESS_FINE_LOCATION,
+                            Manifest.permission.ACCESS_COARSE_LOCATION,
+                            android.Manifest.permission.SEND_SMS,
+                            Manifest.permission.CALL_PHONE,
+                    },
+                    1);
+        }
+
+        // Wait on location activity permission
+        while (
+                ContextCompat.checkSelfPermission(
+                        this,
+                        android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
+        ) {
+            try {
+                Thread.sleep(100);
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
+        }
 
         // Search bar listener
         searchLocation = findViewById(R.id.searchview_bar);
@@ -282,99 +483,6 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        // Emergency contacts load from shared preferences
-        SharedPreferences sharedPref = getSharedPreferences("userdata", Context.MODE_PRIVATE);
-        String emergencyContactsString = sharedPref.getString("emergencyContacts", null);
-
-        // SOS Button listener
-        FloatingActionButton sosButton = findViewById(R.id.sos_button);
-        // If either call or SMS permission is not granted, display a toast and,
-        // change SOS button background to grey, and set a listener
-        // to the SOS button to grant permissions activity
-        if (ContextCompat.checkSelfPermission(this, android.Manifest.permission.SEND_SMS)
-                != PackageManager.PERMISSION_GRANTED ||
-                ContextCompat.checkSelfPermission(this, android.Manifest.permission.CALL_PHONE)
-                        != PackageManager.PERMISSION_GRANTED) {
-            // Permission is not granted
-            // Request permission
-            ActivityCompat.requestPermissions(this,
-                    new String[]{android.Manifest.permission.SEND_SMS, android.Manifest.permission.CALL_PHONE},
-                    1);
-            sosButton.setBackgroundTintList(ContextCompat.getColorStateList(this, R.color.grey));
-            sosButton.setOnClickListener(view -> {
-                // Launch the basic permission missing activity
-                Intent intent = new Intent(this, BasicPermissionMissingActivity.class);
-                startActivityForResult(intent, RequestCode.BASIC_PERMISSION_MISSING_ACTIVITY.getValue());
-            });
-        } else {
-            sosButton.setOnClickListener(view -> {
-                System.out.println("SOS Button clicked");
-                BasicPermissionMissingActivity.getMissingPermissions(this).forEach(permission -> {
-                    System.out.println("Permission Missing: " + permission);
-                });
-
-                // Start a background thread to send the SMSes
-                Thread smsThread = new Thread(() -> {
-                    // Send SMSes to the emergency contacts
-
-                    Gson gson = new Gson();
-
-                    Map<String, String> emContactMap = gson.fromJson(emergencyContactsString, Map.class);
-
-                    if (emergencyContacts == null) {
-                        emergencyContacts = new ArrayList<>();
-                    }
-
-                    if (emContactMap == null) {
-                        emContactMap = new HashMap<>();
-                    }
-
-                    for (Map.Entry<String, String> entry : emContactMap.entrySet()) {
-                        emergencyContacts.add(
-                                new EmergencyContact(
-                                        entry.getKey().hashCode(),
-                                        entry.getKey(),
-                                        entry.getValue()
-                                )
-                        );
-                    }
-
-                    for (EmergencyContact emergencyContact : emergencyContacts) {
-                        System.out.println("Sending SMS to: " + emergencyContact.phoneNumber);
-                        // Send SMS to the emergency contact
-                        SmsManager smsManager = SmsManager.getDefault();
-                        smsManager.sendTextMessage(emergencyContact.phoneNumber, null, "TEST: I need help", null, null);
-                    }
-
-                    runOnUiThread(() -> {
-                        Toast.makeText(this, "SMSes sent", Toast.LENGTH_SHORT).show();
-                    });
-                });
-
-                smsThread.start();
-
-                Intent intent = new Intent(Intent.ACTION_CALL);
-//                intent.setData(Uri.parse("tel:+16198970892")); // Test number
-                intent.setData(Uri.parse("tel:911")); // Emergency number
-                if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.CALL_PHONE) == PackageManager.PERMISSION_GRANTED) {
-                    this.startActivity(intent);
-
-                    // Get instance of Vibrator from current Context
-                    Vibrator v = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
-
-                    // Initiate a long two pulse vibration
-                    VibrationEffect vibrationEffect = VibrationEffect.createWaveform(
-                            new long[]{
-                                    0, 2000, 100, 2000, 100, 2000
-                            }, -1
-                    );
-
-                    // Vibrate for 400 milliseconds
-                    v.vibrate(vibrationEffect);
-                }
-            });
-        }
-
         // Add listener to the Message Boards button
         Button messageBoardsButton = findViewById(R.id.message_boards_button);
         messageBoardsButton.setOnClickListener(view -> {
@@ -393,58 +501,6 @@ public class MainActivity extends AppCompatActivity {
             startActivity(intent);
         });
 
-        // Background thread to get all the reports, get the locations of the reports, and the types of the reports
-        // From firebase rtdb
-        Thread thread = new Thread(() -> {
-            // Get all the reports
-            List<Report> reports = new ArrayList<Report>();
-
-            // Get reportsref from firebase
-            FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
-            DatabaseReference reportsRef = firebaseDatabase.getReferenceFromUrl(getString(R.string.firebase_database_url) + "/report");
-
-            System.out.println("Reports ret THREAD: " + reportsRef.toString());
-
-            reportsRef.get().addOnSuccessListener(task -> {
-                System.out.println("Reports ret THREAD : Reports: " + task.getValue());
-
-                if (task.getValue() == null) {
-                    System.out.println("Reports ret THREAD : No reports");
-                    return;
-                }
-
-                // Get the reports hashmap
-                Map<String, Object> allReportsMap = (Map<String, Object>) task.getValue();
-
-                List<Report> allReports = HeatmapHelper.transformReports(allReportsMap);
-
-                // Currently always recompute the weighted lat longs
-                HeatmapTileProvider heatmapTileProvider = transformReportsToHeatmapTileProvider(allReports, null);
-
-                System.out.println("HMT Data" + heatmapTileProvider.getTile(0, 0, 0).data.length);
-
-                System.out.println("Reports ret THREAD : Ready to Update map fragment");
-
-                ((MainScreenMapFragment) mapFragment).setHeatmap(heatmapTileProvider);
-
-                runOnUiThread(
-                        () -> {
-                            System.out.println("Reports ret UITHREAD : Updating map fragment");
-                            // Update the map fragment
-                            // ((MainScreenMapFragment) mapFragment).setHeatmap(heatmapTileProvider);
-                        }
-                );
-
-            }).addOnFailureListener(task -> {
-                System.out.println("Reports ret BUILDER THREAD : Failed to get reports");
-            });
-
-            // Get the types of the reports
-
-        });
-
-        thread.start();
-
         // Set Why Login button listener to a dialog
         Button why_login_button = findViewById(R.id.why_login);
         why_login_button.setOnClickListener(view -> {
@@ -460,6 +516,50 @@ public class MainActivity extends AppCompatActivity {
             builder.show();
         });
 
+        if(!isLocationFullyEnabled) {
+            enableLocationFeatures();
+        }
+        if(!isCommunicationFullyEnabled) {
+            enableCommunicationFeatures();
+        }
+    }
+
+    private void MakeTiles() {
+        // Get all the reports
+        List<Report> reports = new ArrayList<Report>();
+
+        // Get reportsref from firebase
+        FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
+        DatabaseReference reportsRef = firebaseDatabase.getReferenceFromUrl(getString(R.string.firebase_database_url) + "/report");
+
+        System.out.println("Reports ret THREAD: " + reportsRef.toString());
+
+        reportsRef.get().addOnSuccessListener(task -> {
+            System.out.println("Reports ret THREAD : Reports: " + task.getValue());
+
+            if (task.getValue() == null) {
+                System.out.println("Reports ret THREAD : No reports");
+                return;
+            }
+
+            // Get the reports hashmap
+            Map<String, Object> allReportsMap = (Map<String, Object>) task.getValue();
+
+            List<Report> allReports = HeatmapHelper.transformReports(allReportsMap);
+
+            // Currently always recompute the weighted lat longs
+            HeatmapTileProvider heatmapTileProvider = transformReportsToHeatmapTileProvider(allReports, null);
+
+            System.out.println("HMT Data" + heatmapTileProvider.getTile(0, 0, 0).data.length);
+
+            System.out.println("Reports ret THREAD : Ready to Update map fragment");
+
+            ((MainScreenMapFragment) mapFragment).setHeatmap(heatmapTileProvider);
+
+        }).addOnFailureListener(task -> {
+            System.out.println("Reports ret BUILDER THREAD : Failed to get reports");
+        });
+        // Get the types of the reports
     }
 
     private void stopLocationUpdates() {
@@ -482,7 +582,6 @@ public class MainActivity extends AppCompatActivity {
         System.out.println("Request code: " + requestCode);
         System.out.println("Result code: " + resultCode);
         if (requestCode == RequestCode.BASIC_PERMISSION_MISSING_ACTIVITY.getValue()) {
-
             // Basic permission missing activity result
             if (resultCode == RESULT_OK) {
                 System.out.println("Result OK");
@@ -498,8 +597,11 @@ public class MainActivity extends AppCompatActivity {
                     System.out.println("SOS Button now clicked");
                 });
 
-            } else {
-                System.out.println("Result not OK");
+            } else if (resultCode == BasicPermissionMissingActivity.PermissionStatus.LOCATION_DENIED.ordinal()){
+                // Location permission denied - App cannot function
+                System.out.println("Location permission denied");
+                Toast.makeText(this, "Location permission denied. App cannot function", Toast.LENGTH_SHORT).show();
+                finish();
             }
         } else {
             System.out.println("Request code not OK. Proceeding without SOS support");
