@@ -142,10 +142,7 @@ public class ReportActivity extends AppCompatActivity {
         String zipcode = ((TextView)findViewById(R.id.zipcode_input)).getText().toString();
         String detail = ((TextView)findViewById(R.id.report_detail_input)).getText().toString();
         String type = ((TextView)findViewById(R.id.type_input)).getText().toString();
-//        Long time = Long.valueOf(((TextView)findViewById(R.id.time_input)).getText().toString());
         String time = year + "-" + month + "-" +day + "T" + hourOfDay + ":" + minute + ":00.000Z";
-
-//        String time = ((TextView)findViewById(R.id.time_input)).getText().toString();
 
         String utcTimePattern = "\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}\\.\\d{3}Z";
         boolean timeAllInitialized = isInitialized(year, month, day, hourOfDay, minute);
@@ -164,14 +161,6 @@ public class ReportActivity extends AppCompatActivity {
         } else {
             hourInitialized = true;
         }
-
-//        Boolean isTimeFormatCorrect = true;
-//        if (!time.matches(utcTimePattern)) {
-//            ((TextView)findViewById(R.id.time_input)).setText("");
-//            isTimeFormatCorrect = false;
-//            showToast("Time has to be in the following format: YYYY-MM-DDTHH:mm:ss.SSSZ");
-//            // Valid UTC time in the specified format
-//        }
 
         if (isInputEmpty(street_address) || isInputEmpty(detail) || isInputEmpty(city)
                 || isInputEmpty(state) || isInputEmpty(zipcode)
