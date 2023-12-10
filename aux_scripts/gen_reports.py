@@ -11,25 +11,32 @@ firebase_admin.initialize_app(
 db = db.reference(url = 'https://group15finalproj-default-rtdb.firebaseio.com/')
 
 report_ref = db.child('report')
-user_ref = db.child('users')
+
+import firebase_admin.firestore as firestore
+
+# firestore_app = firebase_admin.initialize_app(
+#     credential=credentials.Certificate('group15finalproj-9916e796488c.json')
+# )
+
+firestore_db = firestore.client()
+
+# Get users from firestore
+users = firestore_db.collection('users').get()
+
+print(users)
+
+for user in users:
+    print(user.to_dict().keys())
+
+list_of_users = []
+for user in users:
+    list_of_users.append(user.to_dict().get('userName'))
+
+print(list_of_users)
 
 import json
 
 print(json.dumps(report_ref.get(), indent=2))
-
-# Report format
-    # {
-    # "city": "t2",
-    # "detail": "t2",
-    # "latitude": 42.361145,
-    # "longitude": -71.057083,
-    # "state": "t2",
-    # "street_address": "t2",
-    # "time": "timestamp in UTC of incident",
-    # "type": "Red Yellow Orange",
-    # "username": "user1",
-    # "zipcode": "t2"
-#   }
 
 # Create a list of 100 reports with random info inside of a 10 mile radius of 42.33251869702252, -71.10496781543584
 import random
@@ -121,13 +128,23 @@ class GoogleAddress:
 
 from geopy.extra.rate_limiter import RateLimiter
 
-for i in tqdm(range(200)):
+custom_lat = 42.33251869702252
+custom_long = -71.10496781543584
 
-    # if i == 5:
-    #     break
+northeasternLat = 42.34017461891752
+northeasternLong = -71.08838892940447
 
-    randomLat = 42.33251869702252 + random.uniform(-0.01, 0.01)
-    randomLong = -71.10496781543584 + random.uniform(-0.01, 0.01)
+centerLat = northeasternLat
+centerLong = northeasternLong
+
+variance_range = 0.001
+
+NUM_REPORTS = 5
+
+for i in tqdm(range(NUM_REPORTS)):
+
+    randomLat = centerLat + random.uniform(-variance_range, variance_range)
+    randomLong = centerLong + random.uniform(-variance_range, variance_range)
 
     # Get the address of the report
     locator = geopy.GoogleV3(api_key=geoCodeKey)
@@ -148,7 +165,7 @@ for i in tqdm(range(200)):
         # time as random utc timestamp within last 24 hours
         'time': math.floor(datetime.datetime.utcnow().timestamp() - random.randint(0, 86400)),
         'type': report_types[random.randint(0, len(report_types) - 1)],
-        'username': user_ref.get()['user' + str(random.randint(1, 99))]['userName'],
+        'username': list_of_users[random.randint(0, len(list_of_users) - 1)],
         # Get the zipcode from the latitude and longitude
         'zipcode': address.get_zipcode(),
         'testing': True

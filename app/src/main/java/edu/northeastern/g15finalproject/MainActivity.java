@@ -519,8 +519,6 @@ public class MainActivity extends AppCompatActivity {
 
             } else {
                 System.out.println("Result not OK");
-                System.out.println("Data received: " + data.toString());
-                System.out.println("Result Code : " + resultCode);
             }
         } else {
             System.out.println("Request code not OK. Proceeding without SOS support");

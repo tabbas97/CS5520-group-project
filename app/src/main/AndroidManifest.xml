@@ -30,9 +30,6 @@
             android:name=".AddPostActivity"
             android:exported="false" />
         <activity
-            android:name=".MessageBoardCommentItem"
-            android:exported="false" />
-        <activity
             android:name=".MessageBoardPostViewActivity"
             android:exported="false" />
         <activity

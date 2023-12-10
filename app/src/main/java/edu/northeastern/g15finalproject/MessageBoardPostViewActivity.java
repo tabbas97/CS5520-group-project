@@ -113,7 +113,7 @@ public class MessageBoardPostViewActivity extends AppCompatActivity {
                     System.out.println("Username: " + username);
                     System.out.println("Post User: " + postUser);
 
-                    postUserTV.setText(postUser);
+                    postUserTV.setText(username);
 
                     // Disable the edit button if the post is not owned by the current user
                     if (!postUser.equals(username)) {

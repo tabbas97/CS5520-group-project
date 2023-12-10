@@ -1,0 +1,27 @@
+List Of Items in submission:
+
+Team Members : 
+	1. Thameem Abbas Ibrahim Bathusha
+		- ibrahimbathusha.t@northeastern.edu
+		- tabbas97
+		- Contributions: 
+			-
+	2. Upmanyu Shrivastava
+		- shrivastava.u@northeastern.edu
+		- TODO
+		- Contributions:
+			- TODO
+	3. Kaiqi Zhang
+		- zhang.kaiq@northeastern.edu
+		- TODO
+		- Contributions:
+			- TODO
+
+Link to Video : TODO
+
+Test Information:
+
+1. Registration can be done with any name/user you prefer
+2. Username with activity: xxxxxxx. Password validation disabled to make testing easier.
+3. Upon first entry, you will be prompted to Login/Register. You may choose to proceed without logging in. However many functionalities would be disabled with an information.
+4. Once logged in, we believe the interface is self-explanatory

@@ -284,7 +284,12 @@ public class AddPostActivity extends AppCompatActivity {
         submitButton.setOnClickListener(
                 v -> {
 
-                    selectedReports = ((AttachReportAdapter)selectReportslistView.getAdapter()).getSelectedReports();
+                    if ((AttachReportAdapter)selectReportslistView.getAdapter() == null) {
+                        Toast.makeText(getApplicationContext(), "No reports selected", Toast.LENGTH_SHORT).show();
+                        selectedReports = new ArrayList<>();
+                    } else {
+                        selectedReports = ((AttachReportAdapter)selectReportslistView.getAdapter()).getSelectedReports();
+                    }
 
                     System.out.println("SUBMIT BUTTON CLICKED");
                     System.out.println("Reports Selected : " + selectedReports.size());

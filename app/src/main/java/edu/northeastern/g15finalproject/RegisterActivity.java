@@ -22,6 +22,8 @@ public class RegisterActivity extends AppCompatActivity {
     EditText reg_full_name;
     EditText reg_dob;
 
+    EditText reg_phone;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -31,6 +33,7 @@ public class RegisterActivity extends AppCompatActivity {
         reg_conf_pass = findViewById(R.id.reg_confpassword_tv);
         reg_full_name = findViewById(R.id.reg_name_tv);
         reg_dob = findViewById(R.id.reg_dob_tv);
+        reg_phone = findViewById(R.id.phone_number_ET);
     }
 
     public void onFullRegisterClick(View view) {
@@ -50,6 +53,7 @@ public class RegisterActivity extends AppCompatActivity {
                     user_reg.setDateOfBirth(reg_dob.getText().toString());
                     user_reg.setPassword(reg_pass.getText().toString());
                     user_reg.setFriendsIds(new ArrayList<>());
+                    user_reg.setPhoneNumber(reg_phone.getText().toString());
 
                     db.collection("users").document(username)
                             .set(user_reg);
