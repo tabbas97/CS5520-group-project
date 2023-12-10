@@ -244,15 +244,32 @@ public class MainActivity extends AppCompatActivity {
 
                     }
                     catch (Exception e){
-
+                        System.out.println("GEOCODER FAILURE :  Exception: " + e.getMessage());
                     }
+
                     if (addressList!=null && addressList.size()>0){
                         Address address = addressList.get(0);
-//                    Location newLocation = new Location("");
-//                    newLocation.setLatitude(address.getLatitude());
-//                    newLocation.setLongitude(address.getLongitude());
                         LatLng latlng = new LatLng(address.getLatitude(), address.getLongitude());
-                        ((MainScreenMapFragment) mapFragment).updateMapLocation(latlng, address.toString());
+
+                        // Check if the address has addressLines, if yes, extract first line
+                        String addressLine = "";
+                        if (address.getFeatureName() != null) {
+                            addressLine = address.getFeatureName();
+
+                            // regex to check if the addressLine is only a number
+                            if (addressLine.matches("\\d+")) {
+                                addressLine = address.getAddressLine(0);
+                            }
+
+                        } else if (address.getAddressLine(0) != null) {
+                            addressLine = address.getAddressLine(0);
+                        } else {
+                            addressLine = address.toString();
+                        }
+
+                        ((MainScreenMapFragment) mapFragment).updateMapLocation(latlng, addressLine);
+                    } else {
+                        Toast.makeText(MainActivity.this, "Location not found", Toast.LENGTH_SHORT).show();
                     }
                 }
                 return false;
