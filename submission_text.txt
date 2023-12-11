@@ -24,7 +24,7 @@ Team Members :
 			- add a new report feature (layout and logic)
 			- get nearby reports feature (layout and logic)
 
-Link to Video : TODO
+Link to Video : https://youtu.be/BV225PsYm88
 
 Test Information:
 
@@ -38,3 +38,16 @@ Basic App Start Flow
 3. Upon first entry, you will be prompted to Login/Register. You may choose to proceed as guest without logging in. 
 	However many functionalities would be disabled with an informational toast.
 4. Once logged in, we believe the interface is self-explanatory
+
+-- Youtube Description
+
+This is a video demo for our Android app. We are a group of 3 students from the Northeastern University, Boston. 
+This app was developed as a part of the course CS5520 Mobile Application Development, Fall 2023. 
+
+Teammates: 
+1. Thameem Abbas Ibrahim Bathusha
+2. Upmanyu Shrivastava
+3. Kaiqi Zhang
+
+This app was developed using Android Studio. The backend is Firebase - Realtime DB and Firestore. 
+The app uses Google Maps API for map related features.
