@@ -28,6 +28,9 @@ Link to Video : TODO
 
 Test Information:
 
+!!! Please select the location provider in the extended emulator settings before opening the app.
+We would also request that the location you set remains inside the heart of Boston, ideally near college or Brigham Circle to show the most amount of activity.
+
 1. Registration can be done with any name/user you prefer
 2. Username with prior activity: testUser4. Password validation disabled to make testing easier. Password on server is registered as "password" for testUser4
 
