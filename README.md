@@ -11,7 +11,7 @@ Team Members :
         - Message Board (layout and logic)
         - SOS Functionality
         - Heatmap generation
-            - Scripted data generation and UI
+            - Scripted synthetic data generation and UI
 2. Upmanyu Shrivastava
     - ushrivas9 - <shrivastava.u@northeastern.edu>
     - Contributions:
