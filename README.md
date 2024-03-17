@@ -5,7 +5,7 @@ Link to Github Repo: <https://github.com/CS5520FeinbergFall2023/group-project-gr
 Team Members :
 
 1. Thameem Abbas Ibrahim Bathusha
-    - tabbas97 - <ibrahimbathusha.t@northeastern.edu>
+    - tabbas97 - <ibrahimbathusha.t@northeastern.edu>, <tabbas97@gmail.com>
     - Contributions:
         - Main Screen (layout and logic)
         - Message Board (layout and logic)
