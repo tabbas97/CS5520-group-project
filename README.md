@@ -29,7 +29,7 @@ Link to Video : <https://youtu.be/BV225PsYm88>
 This is a video demo for our Android app. We are a group of 3 students from the Northeastern University, Boston.
 This app was developed as a part of the course CS5520 Mobile Application Development, Fall 2023.
 
-![Screenshot]("./Screenshot from 2024-03-17 13-26-09.png")
+![Screenshot](./Screenshot.png)
 
 Teammates:
 
